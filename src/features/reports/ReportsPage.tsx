@@ -21,19 +21,23 @@ import { SearchInput } from '@/shared/ui/SearchInput'
 import { Select } from '@/shared/ui/Select'
 import { StatCards } from '@/shared/ui/StatCards'
 import { Tooltip } from '@/shared/ui/Tooltip'
-import type { ReportParams } from './api'
+import type { ReportParams, ReportStatusCode } from './api'
 import { useReportAnalytics, useReports } from './hooks'
+import { useLiveRows } from './live/useLiveRows'
 import { ReportDrawer } from './ReportDrawer'
 import { ReportFormModal } from './ReportFormModal'
 import { ReportPreview } from './ReportPreview'
 import { ReportSourceIcon } from './ReportSourceIcon'
 import { ReportStatusBadge } from './ReportStatusBadge'
+import { ReportsTabs } from './ReportsTabs'
 import { ReviewBar } from './ReviewBar'
-import { isReportStatus, isReviewable, STATUS_OPTIONS } from './statuses'
+import { isReportStatus, isReviewable, STATUS_OPTIONS, statusLabel } from './statuses'
 import { useReportSelection } from './useReportSelection'
 
 // vehicleId приходит из ссылки «Отчёты по этой машине»
 const FILTERS = ['landfillId', 'vehicleId', 'status', 'from', 'to'] as const
+// В очереди проверки статус задан самим разделом
+const REVIEW_FILTERS = ['landfillId', 'vehicleId', 'from', 'to'] as const
 
 const COLUMNS = ['Время', 'Полигон', 'Номер', 'С грузом', 'Пустая', 'Вес отходов', 'Статус']
 
@@ -83,10 +87,18 @@ function LandfillSummary(props: ScopeProps) {
   )
 }
 
-export function ReportsPage() {
-  const landfillFilter = useLandfillFilter(FILTERS)
+// review — подраздел «На проверке»: только отчёты, ждущие проверки, без статистики и фильтра статуса
+// Статус отчёта, который только что ушёл из списка: названия статуса в событии нет, только код
+function GoneStatus({ status, deleted }: { status: ReportStatusCode | null; deleted: boolean }) {
+  if (deleted || !status) return <span className="badge status-deleted">Удалён</span>
+  return <ReportStatusBadge status={{ code: status, name: statusLabel(status) }} />
+}
+
+export function ReportsPage({ review = false }: { review?: boolean }) {
+  const landfillFilter = useLandfillFilter(review ? REVIEW_FILTERS : FILTERS)
   const list = useListParams(landfillFilter.filterKeys)
-  const { vehicleId, status, from, to } = list.filters
+  const { vehicleId, from, to } = list.filters
+  const status = review ? 'awaiting_review' : list.filters.status
   const landfillId = landfillFilter.enabled ? list.filters.landfillId : undefined
 
   const scope: ScopeProps = {
@@ -106,10 +118,17 @@ export function ReportsPage() {
     to: to ? endOfDayIso(to) : undefined,
   }
   const query = useReports(params)
+  const listKey = JSON.stringify(params)
+  // Отчёт, который ушёл из списка с фильтром по статусу (например, его принял другой проверяющий),
+  // ещё несколько секунд виден на месте с новым статусом
+  const rows = useLiveRows(query.data?.items, listKey, {
+    placeholder: query.isPlaceholderData,
+    keepGone: Boolean(params.status),
+  })
 
   // Проверяющие (контролер полигона, администрация организации, разработчик) выделяют отчёты для массовой смены статуса
   const canReview = useCan('reports.review')
-  const selection = useReportSelection(query.data?.items, JSON.stringify(params))
+  const selection = useReportSelection(query.data?.items, listKey)
 
   // Отчёт через веб создают оператор, контролер полигона и администрация организации — в своём полигоне
   const canCreate = useCan('reports.create')
@@ -171,23 +190,30 @@ export function ReportsPage() {
   return (
     <>
       <ListPage
-        title="Отчёты"
+        title={review ? 'Отчёты на проверке' : 'Отчёты'}
         list={list}
         query={query}
+        items={rows}
         actions={canCreate && <AddButton label="Добавить отчёт" onClick={create.show} />}
         columns={headers}
         tableClass={tableClass}
         above={canReview && <ReviewBar selection={selection} />}
         top={
           <>
-            <ReportStats {...scope} />
-            <LandfillSummary {...scope} />
+            <ReportsTabs />
+            {!review && (
+              <>
+                <ReportStats {...scope} />
+                <LandfillSummary {...scope} />
+              </>
+            )}
           </>
         }
         filters={
           <>
             <SearchInput
-              span={landfillFilter.enabled ? 1 : 2}
+              // Без фильтра статуса поиск занимает и его колонку
+              span={landfillFilter.enabled ? (review ? 2 : 1) : review ? 3 : 2}
               value={list.search}
               onChange={list.setSearch}
               placeholder="Номер машины"
@@ -198,16 +224,18 @@ export function ReportsPage() {
                 onChange={(value) => list.setFilter('landfillId', value)}
               />
             )}
-            <Select
-              filter
-              value={status}
-              options={STATUS_OPTIONS}
-              onChange={(value) => list.setFilter('status', value)}
-            />
+            {!review && (
+              <Select
+                filter
+                value={status}
+                options={STATUS_OPTIONS}
+                onChange={(value) => list.setFilter('status', value)}
+              />
+            )}
             <DateRangePicker from={from} to={to} onChange={list.setFilters} />
           </>
         }
-        renderRow={(report) => (
+        renderRow={({ report, fresh, gone }) => (
           // Строка не ссылка целиком: внутри <a> нельзя класть чекбокс. Ссылка на номере растянута
           // на всю строку через ::after, чекбокс лежит поверх неё
           <Fragment key={report.id}>
@@ -215,6 +243,8 @@ export function ReportsPage() {
               className={cx(
                 'report-row row-linked',
                 selection.isSelected(report.id) && 'selected',
+                fresh && 'fresh',
+                gone && 'gone',
                 expanded.has(report.id) && 'expanded',
                 report.id === reportId && 'active',
               )}
@@ -228,7 +258,7 @@ export function ReportsPage() {
                     aria-label={`Выбрать отчёт ${plateLabel(report)}`}
                     checked={selection.isSelected(report.id)}
                     // Отправленный в ФГИС УТКО отчёт больше не меняется
-                    disabled={!isReviewable(report.status.code)}
+                    disabled={Boolean(gone) || !isReviewable(report.status.code)}
                     onChange={() => selection.toggle(report.id)}
                   />
                 </span>
@@ -275,7 +305,11 @@ export function ReportsPage() {
                 {formatKg(report.weightNettoKg)}
               </div>
               <div className="cell cell-status" data-label="Статус">
-                <ReportStatusBadge status={report.status} />
+                {gone ? (
+                  <GoneStatus status={gone.status} deleted={gone.kind === 'deleted'} />
+                ) : (
+                  <ReportStatusBadge status={report.status} />
+                )}
                 {report.wasteType && !report.wasteType.requiresSending && (
                   <Tooltip
                     className="no-sending-mark"

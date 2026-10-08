@@ -1,12 +1,12 @@
-import { CircleX } from 'lucide-react'
+import { CircleX, Send } from 'lucide-react'
 import { useCan } from '@/features/auth/permissions'
 import { useDisclosure } from '@/shared/lib/useDisclosure'
 import { Button } from '@/shared/ui/Button'
 import type { ReportDetails, ReviewStatusCode } from './api'
-import { useChangeReportsStatus } from './hooks'
+import { useChangeReportsStatus, useSendReports } from './hooks'
 import { RejectModal } from './RejectModal'
 import { REVIEW_ACTIONS } from './reviewActions'
-import { canReviewTo } from './statuses'
+import { canReviewTo, isSendable } from './statuses'
 
 type Props = {
   report: ReportDetails
@@ -19,11 +19,23 @@ type Props = {
 export function ReportReviewActions({ report, onMessage }: Props) {
   const canReview = useCan('reports.review')
   const change = useChangeReportsStatus()
+  const send = useSendReports()
+  const busy = change.isPending || send.isPending
   const confirmReject = useDisclosure()
 
   const actions = REVIEW_ACTIONS.filter((a) => canReviewTo(a.to, report.status.code))
   const canReject = canReviewTo('rejected', report.status.code)
-  if (!canReview || (actions.length === 0 && !canReject)) return null
+  const canSend = isSendable(report.status.code)
+  if (!canReview || (actions.length === 0 && !canReject && !canSend)) return null
+
+  // Отчёт сразу становится «Отправляется», итог карточка покажет сама, когда придёт событие с сервера
+  const runSend = () => {
+    onMessage(null)
+    send.mutate([report.id], {
+      onSuccess: (result) => onMessage(result.skipped[0]?.reason ?? null),
+      onError: (error) => onMessage(error.message),
+    })
+  }
 
   const run = (status: ReviewStatusCode, comment?: string, onDone?: () => void) => {
     onMessage(null)
@@ -49,12 +61,18 @@ export function ReportReviewActions({ report, onMessage }: Props) {
 
   return (
     <>
+      {canSend && (
+        <Button variant="soft" loading={send.isPending} disabled={busy} onClick={runSend}>
+          <Send className="icon" />
+          Отправить в ФГИС
+        </Button>
+      )}
       {actions.map(({ to, icon: Icon, label }) => (
         <Button
           key={to}
           variant="soft"
           loading={change.isPending && change.variables?.status === to}
-          disabled={change.isPending}
+          disabled={busy}
           onClick={() => run(to)}
         >
           <Icon className="icon" />
@@ -62,7 +80,7 @@ export function ReportReviewActions({ report, onMessage }: Props) {
         </Button>
       ))}
       {canReject && (
-        <Button variant="danger-soft" disabled={change.isPending} onClick={confirmReject.show}>
+        <Button variant="danger-soft" disabled={busy} onClick={confirmReject.show}>
           <CircleX className="icon" />
           Отклонить
         </Button>

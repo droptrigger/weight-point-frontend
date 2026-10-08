@@ -9,6 +9,7 @@ export type ReportStatusCode =
   | 'rejected'
   | 'accepted' // принят, отправка в ФГИС УТКО для вида отхода не нужна
   | 'awaiting_sending' // принят и ждёт отправки в ФГИС УТКО
+  | 'sending' // уходит в ФГИС УТКО прямо сейчас: отчёт не меняется, пока не придёт ответ
   | 'sent'
   | 'sending_failed' // текст ошибки — в комментарии последней записи истории статусов
 export type ReportStatus = { code: ReportStatusCode; name: string }
@@ -27,6 +28,15 @@ export type StatusChangeResult = {
   updated: { reportId: string; status: ReportStatus }[]
   skipped: { reportId: string; reason: string }[]
 }
+
+// Ручная отправка: отчёты сразу становятся «Отправляется» и уходят в фоне, итог каждого приходит через SignalR
+export type SendResult = {
+  queued: string[] // в порядке отправки
+  skipped: { reportId: string; reason: string }[]
+}
+
+// Всё, что ждёт отправки, или повтор всех ошибок
+export type SendAllStatus = Extract<ReportStatusCode, 'awaiting_sending' | 'sending_failed'>
 
 // Запись истории статусов. changedBy: null — статус сменила система (например, выгрузка в ФГИС УТКО)
 export type ReportStatusHistoryItem = {
@@ -51,6 +61,7 @@ export type ReportBrief = {
   syncedAt: string | null // момент приёма отчёта сервером
   sentAt: string | null // момент отправки в ФГИС УТКО
   status: ReportStatus
+  statusComment: string | null // причина отклонения или текст ошибки отправки
   source: ReportSource
   updatedAt: string
 }
@@ -133,7 +144,12 @@ export type ReportParams = {
   from?: string
   to?: string
   status?: ReportStatusCode
+  sort?: ReportSort
 }
+
+// По умолчанию новые сверху. createdAt — очередь отправки (старые сверху), -sentAt — недавно отправленные,
+// -updatedAt — недавно изменённые (последние ошибки отправки)
+export type ReportSort = 'createdAt' | '-createdAt' | '-sentAt' | '-updatedAt'
 
 export type ReportAnalytics = {
   totalReportsCount: number
@@ -150,6 +166,10 @@ export const reportsApi = {
     http.get<ReportAnalytics>('/report/analytics', { LandfillId: landfillId }),
   changeStatus: (reportIds: string[], status: ReviewStatusCode, comment?: string) =>
     http.patch<StatusChangeResult>('/report/status', { reportIds, status, comment }),
+  send: (reportIds: string[]) => http.post<SendResult>('/report/send', { reportIds }),
+  // landfillId нужен только разработчику, остальные отправляют отчёты своего полигона
+  sendAll: (status: SendAllStatus, landfillId?: string) =>
+    http.post<SendResult>('/report/send-all', { status, landfillId }),
   // От старых записей к новым
   statusHistory: (id: string) =>
     http.get<ReportStatusHistoryItem[]>(`/report/${id}/status-history`),

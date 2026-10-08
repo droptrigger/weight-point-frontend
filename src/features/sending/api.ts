@@ -13,6 +13,12 @@ export type SendingSettings = {
   pinLockedUntil: string | null // ввод ПИН-кода заблокирован после 5 неверных попыток
 }
 
+// Состояние отправки без ключей и ПИН-кода: его видят все, кто отправляет отчёты вручную (с контролера полигона)
+export type SendingStatus = Pick<
+  SendingSettings,
+  'landfillId' | 'autoSendEnabled' | 'sendIntervalMinutes' | 'nextRunAt'
+> & { hasCredentials: boolean }
+
 export type SendingSchedule = Pick<SendingSettings, 'autoSendEnabled' | 'sendIntervalMinutes'>
 
 export type FgisCredentials = { objectId: string | null; accessKey: string | null }
@@ -27,6 +33,7 @@ const base = (landfillId: string) => `/landfill/${landfillId}/sending-settings`
 
 export const sendingApi = {
   get: (landfillId: string) => http.get<SendingSettings>(base(landfillId)),
+  status: (landfillId: string) => http.get<SendingStatus>(`/landfill/${landfillId}/sending-status`),
   updateSchedule: (landfillId: string, d: SendingSchedule) =>
     http.put<SendingSettings>(base(landfillId), { landfillId, ...d }),
   setPin: (landfillId: string, d: PinInput) =>
