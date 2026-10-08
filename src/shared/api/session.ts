@@ -12,6 +12,8 @@ function read(): Tokens | null {
 }
 
 let tokens = read()
+// Причина принудительного выхода: страница входа показывает её один раз
+let notice: string | null = null
 const listeners = new Set<() => void>()
 const emit = () => listeners.forEach((l) => l())
 
@@ -22,10 +24,16 @@ export const session = {
     localStorage.setItem(KEY, JSON.stringify(next))
     emit()
   },
-  clear() {
+  clear(reason?: string) {
+    notice = reason ?? null
     tokens = null
     localStorage.removeItem(KEY)
     emit()
+  },
+  takeNotice() {
+    const value = notice
+    notice = null
+    return value
   },
   subscribe(listener: () => void) {
     listeners.add(listener)

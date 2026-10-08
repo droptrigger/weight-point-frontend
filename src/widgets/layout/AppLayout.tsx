@@ -1,6 +1,15 @@
 import type { CSSProperties } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
-import { BarChart3, Info, LogOut, MapPin, Recycle, Users, type LucideIcon } from 'lucide-react'
+import {
+  BarChart3,
+  Info,
+  LogOut,
+  MapPin,
+  Recycle,
+  Send,
+  Users,
+  type LucideIcon,
+} from 'lucide-react'
 import { CurrentUser } from '@/features/auth/CurrentUser'
 import { useMe } from '@/features/auth/hooks'
 import { LogoutConfirm } from '@/features/auth/LogoutConfirm'
@@ -30,6 +39,7 @@ const NAV: NavItem[] = [
   { to: '/carriers', icon: HandTruck, label: 'Перевозчики' },
   { to: '/waste-types', icon: Recycle, label: 'Виды отходов' },
   { to: '/users', icon: Users, label: 'Пользователи', permission: 'users.view' },
+  { to: '/sending', icon: Send, label: 'Настройки ФГИС', permission: 'sending.manage' },
 ]
 
 export function AppLayout() {
@@ -37,6 +47,8 @@ export function AppLayout() {
   const { data: me, isPending } = useMe()
   const logout = useDisclosure()
   const sidebar = useSidebarResize()
+  // Подсказка ручки видна при наведении на всю высоту кромки, а не только на саму ручку
+  const edgeHover = useDisclosure()
 
   const ownLandfillId = useOwnLandfillId()
 
@@ -117,7 +129,7 @@ export function AppLayout() {
             </button>
           </div>
 
-          {/* Кромка меню: тянуть мышью, стрелки и Enter — с клавиатуры */}
+          {/* Кромка меню: нажать или потянуть мышью, стрелки и Enter — с клавиатуры */}
           <div
             className={cx('sidebar-resize', sidebar.dragging && 'dragging')}
             role="separator"
@@ -128,12 +140,15 @@ export function AppLayout() {
             aria-valuenow={sidebar.collapsed ? 0 : 1}
             aria-valuetext={sidebar.collapsed ? 'Свёрнуто' : 'Развёрнуто'}
             tabIndex={0}
+            onMouseEnter={edgeHover.show}
+            onMouseLeave={edgeHover.hide}
             {...sidebar.handleProps}
           />
           {/* Ручка снаружи меню: нажать — свернуть или развернуть, потянуть — изменить ширину */}
           <Tooltip
             className={cx('sidebar-grip', sidebar.dragging && 'dragging')}
             hidden={sidebar.dragging}
+            active={edgeHover.open}
             content={
               <span className="tooltip-text">
                 {sidebar.collapsed

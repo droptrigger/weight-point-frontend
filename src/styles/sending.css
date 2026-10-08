@@ -1,0 +1,113 @@
+/* ---------- Отправка в ФГИС УТКО ---------- */
+
+/* Пояснение под полем формы или списком карточки */
+.form-hint {
+  flex: 1 1 100%;
+  margin: -6px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-light);
+}
+
+/* Две карточки одинаковой ширины, высота у каждой по содержимому */
+.sending-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 12px;
+}
+
+.sending-cards .entity-card {
+  max-width: none;
+}
+
+@media (max-width: 800px) {
+  .sending-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Ключи на карточке: подпись и поле с «глазом» или копированием ---------- */
+
+.secret-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.secret-label {
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+/* Поле в стиле обычного input: та же высота, рамка и скругление, кнопка внутри справа */
+.secret-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 48px;
+  padding: 0 6px 0 14px;
+  border: 1px solid var(--field-border);
+  border-radius: var(--radius);
+  background: var(--bg-muted);
+  transition:
+    border-color 0.15s,
+    background-color 0.15s;
+}
+
+/* Открытый ключ — на светлом фоне с синей рамкой: видно, что он сейчас на экране */
+.secret-field.is-revealed {
+  border-color: var(--primary);
+  background: var(--surface);
+}
+
+.secret-field.is-empty {
+  border-style: dashed;
+  background: none;
+}
+
+/* Ключи — GUID: моноширинный шрифт, чтобы символы не путались (0 и O, 1 и l) */
+.secret-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text);
+}
+
+/* Звёздочки — приглушённые и разрежённые, чтобы читались как маска, а не как значение */
+.secret-field:not(.is-revealed) .secret-text {
+  letter-spacing: 0.08em;
+  color: var(--text-light);
+}
+
+.secret-field.is-empty .secret-text {
+  font-family: inherit;
+  letter-spacing: normal;
+}
+
+/* Открытый ключ выделяется целиком по клику, чтобы его можно было скопировать и без кнопки */
+.secret-field.is-revealed .secret-text {
+  user-select: all;
+}
+
+.secret-action {
+  flex: none;
+}
+
+.secret-action:hover {
+  background: var(--bg-hover);
+  color: var(--primary);
+}
+
+.secret-action.is-done,
+.secret-action.is-done:hover {
+  color: var(--success);
+}

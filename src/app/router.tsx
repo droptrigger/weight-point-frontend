@@ -11,6 +11,7 @@ import { LandfillPage } from '@/features/landfills/LandfillPage'
 import { LandfillsPage } from '@/features/landfills/LandfillsPage'
 import { ReportPage } from '@/features/reports/ReportPage'
 import { ReportsPage } from '@/features/reports/ReportsPage'
+import { SendingPage } from '@/features/sending/SendingPage'
 import { UserPage } from '@/features/users/UserPage'
 import { UsersPage } from '@/features/users/UsersPage'
 import { VehiclePage } from '@/features/vehicles/VehiclePage'
@@ -49,6 +50,10 @@ export const router = createBrowserRouter([
           {
             element: <RequirePermission permission="analytics.view" />,
             children: [{ path: 'analytics', element: <AnalyticsPage /> }],
+          },
+          {
+            element: <RequirePermission permission="sending.manage" />,
+            children: [{ path: 'sending', element: <SendingPage /> }],
           },
           {
             element: <RequirePermission permission="users.view" />,

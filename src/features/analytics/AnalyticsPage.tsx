@@ -1,12 +1,11 @@
 import type { ReactNode } from 'react'
-import { useSearchParams } from 'react-router-dom'
 import { MapPin } from 'lucide-react'
 import { useMe } from '@/features/auth/hooks'
 import { useCan, useOwnLandfillId } from '@/features/auth/permissions'
-import { useLandfillOptions } from '@/features/landfills/hooks'
 import { LandfillAnalytics } from '@/features/landfills/LandfillAnalytics'
 import { LandfillNettoChart } from '@/features/landfills/LandfillNettoChart'
 import { LandfillReportsCalendar } from '@/features/landfills/LandfillReportsCalendar'
+import { usePickedLandfill } from '@/features/landfills/usePickedLandfill'
 import { remoteSelectProps } from '@/shared/lib/remoteOptions'
 import { EmptyState } from '@/shared/ui/EmptyState'
 import { PageHeader } from '@/shared/ui/PageHeader'
@@ -14,22 +13,6 @@ import { Select } from '@/shared/ui/Select'
 import { Skeleton } from '@/shared/ui/Skeleton'
 
 type Scope = { landfillId: string; name?: string; loading: boolean }
-
-// Разработчик выбирает полигон; пока выбора нет, показывается первый полигон из списка.
-// Выбор хранится в ссылке, чтобы «назад» и обновление страницы его не сбрасывали
-function usePickedLandfill(enabled: boolean) {
-  const [params, setParams] = useSearchParams()
-  const picked = params.get('landfillId') ?? ''
-  const options = useLandfillOptions(picked || undefined, enabled)
-  const landfillId = picked || (options.options[0]?.value ?? '')
-  const option =
-    options.options.find((o) => o.value === landfillId) ??
-    (options.current?.value === landfillId ? options.current : undefined)
-
-  const pick = (id: string) => setParams(id ? { landfillId: id } : {}, { replace: true })
-
-  return { options, landfillId, name: option?.label, pick }
-}
 
 export function AnalyticsPage() {
   const canPick = useCan('landfills.filter')

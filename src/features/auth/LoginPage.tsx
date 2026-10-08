@@ -16,6 +16,7 @@ export function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [show, setShow] = useState(false)
+  const [notice] = useState(session.takeNotice)
   const login = useMutation({
     mutationFn: authApi.login,
     onSuccess: (tokens) => session.set(tokens),
@@ -73,6 +74,7 @@ export function LoginPage() {
             </div>
           </Field>
 
+          {notice && !login.error && <div className="modal-error">{notice}</div>}
           <FormError error={login.error} />
           <Button type="submit" loading={login.isPending}>
             Войти

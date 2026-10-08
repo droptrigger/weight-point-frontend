@@ -532,6 +532,42 @@
   margin: 4px 0 0;
 }
 
+/* ---------- Пояснение в карточке (Notice) ---------- */
+
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  background: var(--bg-muted);
+  color: var(--text-muted);
+}
+
+.notice-icon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  /* Иконка по центру первой строки текста (высота строки 21px) */
+  margin-top: 1.5px;
+  color: var(--primary);
+}
+
+.notice-text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.notice--danger {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.notice--danger .notice-icon {
+  color: var(--danger);
+}
+
 /* ---------- История статусов отчёта ---------- */
 
 .status-history {

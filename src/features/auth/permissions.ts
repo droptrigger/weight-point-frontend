@@ -22,6 +22,8 @@ export type Permission =
   | 'analytics.view' // аналитика полигона: сводка, график веса отходов и календарь отчётов
   | 'inactive.view' // неактивные (удалённые) записи в списках
   | 'inactive.restore' // восстановление удалённых записей
+  | 'sending.manage' // отправка в ФГИС УТКО: автоотправка, ключи доступа и ПИН-код своего полигона
+  | 'sending.reset' // сброс забытого ПИН-кода (вместе с ним стираются ключи ФГИС УТКО)
 
 // Права описаны в одном месте и совпадают с сервером. Это только видимость в интерфейсе, проверку делает сервер.
 // Каждая роль может всё, что предыдущая: оператор < контролер < администрация (свой полигон) < разработчик
@@ -45,6 +47,7 @@ const ADMIN: readonly Permission[] = [
   'landfills.edit',
   'inactive.view',
   'inactive.restore',
+  'sending.manage',
 ]
 
 const MATRIX: Record<Role, readonly Permission[]> = {
@@ -58,6 +61,7 @@ const MATRIX: Record<Role, readonly Permission[]> = {
     'landfills.manage',
     'landfills.filter',
     'landfills.assign',
+    'sending.reset',
   ],
 }
 

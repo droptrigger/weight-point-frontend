@@ -27,7 +27,7 @@ const write = (collapsed: boolean) => {
 }
 
 // Ширина бокового меню: кромку и ручку тянут, при отпускании меню прилипает к одному из двух
-// положений. Нажатие на ручку сворачивает и разворачивает меню; выбор запоминается в браузере
+// положений. Нажатие на кромку или ручку сворачивает и разворачивает меню; выбор запоминается в браузере
 export function useSidebarResize() {
   const [collapsed, setCollapsed] = useState(read)
   const [dragWidth, setDragWidth] = useState<number | null>(null)
@@ -50,7 +50,7 @@ export function useSidebarResize() {
     else if (tap) change(!collapsed)
   }
 
-  const pointerProps = (tap: boolean) => ({
+  const pointerProps = {
     onPointerDown: (e: PointerEvent<HTMLElement>) => {
       if (e.button !== 0) return
       e.preventDefault()
@@ -67,9 +67,9 @@ export function useSidebarResize() {
       const next = state.start + e.clientX - state.x
       setDragWidth(clamp(next, SIDEBAR_COLLAPSED_W, SIDEBAR_EXPANDED_W))
     },
-    onPointerUp: () => end(tap),
+    onPointerUp: () => end(true),
     onPointerCancel: () => end(false),
-  })
+  }
 
   return {
     width,
@@ -77,7 +77,7 @@ export function useSidebarResize() {
     collapsed: width < THRESHOLD,
     dragging: pressed,
     handleProps: {
-      ...pointerProps(false),
+      ...pointerProps,
       onKeyDown: (e: KeyboardEvent<HTMLElement>) => {
         if (e.key === 'ArrowLeft') change(true)
         else if (e.key === 'ArrowRight') change(false)
@@ -86,6 +86,6 @@ export function useSidebarResize() {
         e.preventDefault()
       },
     },
-    gripProps: pointerProps(true),
+    gripProps: pointerProps,
   }
 }

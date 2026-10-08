@@ -10,20 +10,22 @@ type Props = {
   content: ReactNode
   className?: string
   hidden?: boolean // не показывать, пока, например, тянут элемент под подсказкой
+  active?: boolean // показать без наведения на якорь, например при наведении на соседний элемент
   children: ReactNode
 }
 
 // Подсказка вместо системного title. Рендерится в body с position: fixed,
 // чтобы её не обрезали контейнеры с overflow: hidden (например, таблица отчётов)
-export function Tooltip({ content, className, hidden, children }: Props) {
+export function Tooltip({ content, className, hidden, active, children }: Props) {
   const id = useId()
   const anchor = useRef<HTMLSpanElement>(null)
   const tip = useRef<HTMLDivElement>(null)
   const [open, setOpen] = useState(false)
   const [pos, setPos] = useState<{ top: number; left: number; below: boolean } | null>(null)
+  const shown = (open || !!active) && !hidden
 
   useLayoutEffect(() => {
-    if (!open || hidden) return
+    if (!shown) return
     const a = anchor.current?.getBoundingClientRect()
     const t = tip.current?.getBoundingClientRect()
     if (!a || !t) return
@@ -41,7 +43,7 @@ export function Tooltip({ content, className, hidden, children }: Props) {
       window.removeEventListener('resize', hide)
       setPos(null)
     }
-  }, [open, hidden])
+  }, [shown])
 
   const show = () => setOpen(true)
   const hide = () => setOpen(false)
@@ -52,7 +54,7 @@ export function Tooltip({ content, className, hidden, children }: Props) {
         ref={anchor}
         className={className}
         tabIndex={0}
-        aria-describedby={open ? id : undefined}
+        aria-describedby={shown ? id : undefined}
         onMouseEnter={show}
         onMouseLeave={hide}
         onFocus={show}
@@ -61,8 +63,7 @@ export function Tooltip({ content, className, hidden, children }: Props) {
       >
         {children}
       </span>
-      {open &&
-        !hidden &&
+      {shown &&
         createPortal(
           <div
             ref={tip}
