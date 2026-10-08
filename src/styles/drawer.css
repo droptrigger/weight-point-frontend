@@ -1,0 +1,281 @@
+/* ---------- Панель отчёта поверх списка ---------- */
+
+/* Список слева остаётся видимым и кликабельным: по строке можно открыть другой отчёт */
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  /* --drawer-w задаёт перетаскивание кромки, без него — ширина по умолчанию */
+  width: var(--drawer-w, max(40vw, min(1040px, calc(100vw - var(--sidebar-w) - 160px))));
+  /* Не уже 40% экрана и не шире области контента: дальше — панель навигации */
+  min-width: 40vw;
+  max-width: calc(100vw - var(--sidebar-w));
+  border-left: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: var(--shadow-pop);
+  animation: drawer-in 0.2s ease-out;
+}
+
+.drawer:focus {
+  outline: none;
+}
+
+/* Развёрнутая панель: вся область контента, сайдбар остаётся видимым */
+.drawer.drawer--full {
+  width: calc(100vw - var(--sidebar-w));
+  max-width: none;
+  border-left: 0;
+  box-shadow: none;
+}
+
+/* Кромка и ручка у левого края панели. Сама обёртка клики не ловит: список под ней доступен */
+.drawer-edge {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Кромка для изменения ширины: шире видимой линии, чтобы в неё было легко попасть */
+.drawer-resize {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -6px;
+  width: 12px;
+  cursor: col-resize;
+  touch-action: none;
+  pointer-events: auto;
+}
+
+.drawer-resize:focus-visible {
+  outline: none;
+}
+
+/* Линия по кромке: при наведении спокойная серая, не акцентная */
+.drawer-resize::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 5px;
+  width: 2px;
+  background: transparent;
+  transition: background-color 0.15s;
+}
+
+/* Ручка снаружи панели, вплотную к кромке: наведение переходит с одной на другую без разрыва */
+.drawer-grip {
+  position: absolute;
+  top: 50%;
+  left: -13px;
+  width: 13px;
+  height: 48px;
+  margin-top: -24px;
+  cursor: col-resize;
+  touch-action: none;
+  pointer-events: auto;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.drawer-grip:focus-visible {
+  outline: none;
+  opacity: 1;
+}
+
+/* Видимая часть ручки — «таблетка» посередине области попадания */
+.drawer-grip::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 2px;
+  width: 8px;
+  border: 1px solid var(--field-border-hover);
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  transition:
+    border-color 0.15s,
+    background-color 0.15s;
+}
+
+.drawer-grip-hit {
+  position: absolute;
+  inset: 0;
+}
+
+.drawer-edge:hover .drawer-grip,
+.drawer-resize:focus-visible + .drawer-grip,
+.drawer-grip.dragging {
+  opacity: 1;
+}
+
+.drawer-edge:hover .drawer-resize::after,
+.drawer-resize:focus-visible::after,
+.drawer-resize.dragging::after,
+.drawer-edge:has(.drawer-grip.dragging) .drawer-resize::after {
+  background: var(--field-border-hover);
+}
+
+.drawer-grip:hover::before,
+.drawer-grip.dragging::before {
+  background: var(--bg-muted);
+}
+
+/* Пока тянут кромку или ручку, текст под курсором не выделяется, а курсор не мигает */
+body:has(.drawer-resize.dragging, .drawer-grip.dragging) {
+  cursor: col-resize;
+  user-select: none;
+}
+
+/* Пока тянут кромку, серая тень панели убрана: остаётся только синее свечение у навигации */
+.drawer.drawer--dragging {
+  box-shadow: none;
+}
+
+/* Кромку дотянули до навигации: мягкое свечение подсказывает, что отпускание развернёт панель */
+.drawer.drawer--snap {
+  border-left-color: var(--primary-border);
+  box-shadow: -6px 0 24px -10px color-mix(in srgb, var(--primary) 30%, transparent);
+}
+
+.drawer.drawer--snap .drawer-resize::after {
+  background: var(--primary-border);
+}
+
+.drawer.drawer--snap .drawer-grip::before {
+  border-color: var(--primary-border);
+  background: var(--primary-soft);
+}
+
+.drawer-snap-hint {
+  position: absolute;
+  top: calc(var(--header-h) + 16px);
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid var(--primary-border);
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: var(--shadow-pop);
+  transform: translateX(-50%);
+  animation: drawer-hint-in 0.15s ease-out;
+  pointer-events: none;
+}
+
+.drawer-snap-hint .icon {
+  width: 16px;
+  height: 16px;
+}
+
+@keyframes drawer-hint-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -4px);
+  }
+}
+
+@keyframes drawer-in {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+}
+
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-shrink: 0;
+  height: var(--header-h);
+  padding: 0 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.drawer-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.drawer-nav h2 {
+  margin: 0 8px 0 8px;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.drawer-count {
+  font-size: 14px;
+  color: var(--text-light);
+  font-variant-numeric: tabular-nums;
+}
+
+.drawer .icon-btn:hover:not(:disabled) {
+  background: var(--bg-tint);
+  color: var(--text);
+}
+
+.drawer-body {
+  flex: 1;
+  padding: 20px 24px 28px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.drawer-body:has(> .empty-state) {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Высота фото считается от экрана: в панели шапка ниже, чем у страницы со статистикой */
+.drawer .weigh-card .photo-frame {
+  min-height: 220px;
+}
+
+/* Строка открытого отчёта в списке */
+.report-row.active,
+.report-row.active:hover {
+  background: var(--primary-soft);
+  box-shadow: inset 3px 0 0 var(--primary);
+}
+
+@media (max-width: 900px) {
+  .drawer,
+  .drawer.drawer--full {
+    width: 100vw;
+    min-width: 0;
+    max-width: none;
+    border-left: 0;
+  }
+
+  .drawer-resize {
+    display: none;
+  }
+
+  .drawer-body {
+    padding: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer,
+  .drawer-snap-hint {
+    animation: none;
+  }
+}

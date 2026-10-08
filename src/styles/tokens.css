@@ -1,0 +1,216 @@
+:root {
+  color-scheme: light;
+
+  --primary: #0f6bac;
+  --primary-hover: #0c5a91;
+  --primary-soft: #e6eff7;
+  --primary-border: #bbd3e6;
+  --primary-soft-hover: #d6e6f2;
+  /* Заливка кнопок и выбранных пунктов под белым текстом */
+  --primary-solid: #0f6bac;
+  --primary-solid-hover: #0c5a91;
+
+  --danger: #f0484f;
+  --danger-strong: #ef5350;
+  --danger-soft: #fdecec;
+  --danger-soft-hover: #fbd9d9;
+  --danger-solid-hover: #e0403d;
+
+  --warning: #b26a00;
+  --warning-soft: #fdf3e1;
+
+  --success: #1e8a4c;
+  --success-soft: #e5f4ea;
+
+  --text: #000;
+  --text-muted: #4a4a4a;
+  --text-light: #828282;
+  --text-faint: #b5b5b5; /* иконки-заглушки, недоступные дни */
+
+  --bg: #fff; /* фон страницы */
+  --surface: #fff; /* карточки, поля, меню, окна */
+  --bg-subtle: #fafafa; /* шапки таблиц */
+  --bg-tint: #f7f9fb; /* раскрытые строки, наведение на группы */
+  --bg-muted: #f0f0f0;
+  --bg-hover: #f6f6f6;
+  --bg-active: #f3f3f3;
+  --line: #e4e4e4;
+  --line-soft: #f0f0f0;
+  --field-border: #dadada;
+  --field-border-hover: #c4c4c4;
+
+  --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.06);
+  --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.25);
+  --skeleton-base-color: #ebebeb;
+  --skeleton-highlight-color: rgba(255, 255, 255, 0.85);
+
+  --radius-sm: 8px;
+  --radius: 10px;
+  --radius-lg: 12px;
+
+  --focus-ring: 0 0 0 3px rgba(15, 107, 172, 0.14);
+  --focus-outline: rgba(15, 107, 172, 0.4);
+  --logo-ink: #2d3640;
+  --logo-accent: #0f6bac;
+
+  --sidebar-w: 240px;
+  --header-h: 72px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family:
+    'Inter Variable',
+    'Inter',
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.muted {
+  margin-bottom: 2px;
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+/* Тёмная тема: выбрана явно или, если выбор «как в системе», по настройке системы.
+   data-theme на <html> ставит скрипт в index.html до отрисовки, чтобы не было вспышки */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --primary: #5aa7e3;
+  --primary-hover: #7ab9ea;
+  --primary-soft: rgba(90, 167, 227, 0.15);
+  --primary-border: rgba(90, 167, 227, 0.4);
+  --primary-soft-hover: rgba(90, 167, 227, 0.25);
+  --primary-solid: #1f74b5;
+  --primary-solid-hover: #2a82c6;
+
+  --danger: #f4777c;
+  --danger-strong: #f26b6e;
+  --danger-soft: rgba(240, 72, 79, 0.16);
+  --danger-soft-hover: rgba(240, 72, 79, 0.26);
+  --danger-solid-hover: #e65a57;
+
+  --warning: #e6a74a;
+  --warning-soft: rgba(230, 167, 74, 0.15);
+
+  --success: #5bc48a;
+  --success-soft: rgba(91, 196, 138, 0.15);
+
+  --text: #e7e9ec;
+  --text-muted: #b3b9c1;
+  --text-light: #858d97;
+  --text-faint: #5c646e;
+
+  --bg: #0f1215;
+  --surface: #171b1f;
+  --bg-subtle: #1b1f24;
+  --bg-tint: #1a2027;
+  --bg-muted: #22272d;
+  --bg-hover: #1f2429;
+  --bg-active: #272d34;
+  --line: #2b3138;
+  --line-soft: #22282e;
+  --field-border: #39414a;
+  --field-border-hover: #4b545e;
+
+  --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.35);
+  --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.6);
+  --skeleton-base-color: #23292f;
+  --skeleton-highlight-color: rgba(255, 255, 255, 0.06);
+
+  --focus-ring: 0 0 0 3px rgba(90, 167, 227, 0.28);
+  --focus-outline: rgba(90, 167, 227, 0.55);
+  /* Тёмно-серые буквы логотипа светлеют, синяя «В» чуть ярче */
+  --logo-ink: #e7e9ec;
+  --logo-accent: #1f74b5;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+
+    --primary: #5aa7e3;
+    --primary-hover: #7ab9ea;
+    --primary-soft: rgba(90, 167, 227, 0.15);
+    --primary-border: rgba(90, 167, 227, 0.4);
+    --primary-soft-hover: rgba(90, 167, 227, 0.25);
+    --primary-solid: #1f74b5;
+    --primary-solid-hover: #2a82c6;
+
+    --danger: #f4777c;
+    --danger-strong: #f26b6e;
+    --danger-soft: rgba(240, 72, 79, 0.16);
+    --danger-soft-hover: rgba(240, 72, 79, 0.26);
+    --danger-solid-hover: #e65a57;
+
+    --warning: #e6a74a;
+    --warning-soft: rgba(230, 167, 74, 0.15);
+
+    --success: #5bc48a;
+    --success-soft: rgba(91, 196, 138, 0.15);
+
+    --text: #e7e9ec;
+    --text-muted: #b3b9c1;
+    --text-light: #858d97;
+    --text-faint: #5c646e;
+
+    --bg: #0f1215;
+    --surface: #171b1f;
+    --bg-subtle: #1b1f24;
+    --bg-tint: #1a2027;
+    --bg-muted: #22272d;
+    --bg-hover: #1f2429;
+    --bg-active: #272d34;
+    --line: #2b3138;
+    --line-soft: #22282e;
+    --field-border: #39414a;
+    --field-border-hover: #4b545e;
+
+    --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.35);
+    --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.6);
+    --skeleton-base-color: #23292f;
+    --skeleton-highlight-color: rgba(255, 255, 255, 0.06);
+
+    --focus-ring: 0 0 0 3px rgba(90, 167, 227, 0.28);
+    --focus-outline: rgba(90, 167, 227, 0.55);
+    --logo-ink: #e7e9ec;
+    --logo-accent: #1f74b5;
+  }
+}
+
+.logo-ink {
+  fill: var(--logo-ink);
+}
+
+.logo-accent {
+  fill: var(--logo-accent);
+}

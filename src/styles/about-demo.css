@@ -1,0 +1,1168 @@
+/* ---------- О системе: интерактивное демо (features/about/ProductDemo.tsx) ---------- */
+
+.about-demo {
+  margin-top: 8px;
+}
+
+.demo-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 20px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.demo-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+.demo-tab .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.demo-tab:hover {
+  color: var(--text);
+}
+
+.demo-tab.active {
+  background: var(--primary-solid);
+  color: #fff;
+}
+
+.demo-tab:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Окно приложения: заголовок с «кнопками» окна, слева меню системы */
+.demo-window {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow:
+    0 30px 80px -24px color-mix(in srgb, var(--primary) 35%, transparent),
+    var(--shadow-pop);
+}
+
+.demo-titlebar {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-subtle);
+}
+
+.demo-dots {
+  display: flex;
+  gap: 8px;
+}
+
+/* Неактивное окно macOS: серые кнопки; цвета и обводка — как у системных */
+.demo-dots i {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--line);
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.12);
+  transition: background-color 0.2s;
+}
+
+.demo-window:hover .demo-dot-close {
+  background: #ff5f57;
+}
+
+.demo-window:hover .demo-dot-min {
+  background: #febc2e;
+}
+
+.demo-window:hover .demo-dot-zoom {
+  background: #28c840;
+}
+
+.demo-screen {
+  display: flex;
+  min-height: 600px;
+}
+
+.demo-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: none;
+  width: 188px;
+  padding: 18px 10px;
+  border-right: 1px solid var(--line);
+}
+
+.demo-nav .logo {
+  height: 22px;
+  margin: 0 10px 18px;
+}
+
+.demo-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+/* Наведение — как у пунктов меню в системе (.nav-item) */
+.demo-nav-item:hover {
+  background: var(--bg-hover);
+}
+
+.demo-nav-item:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
+.demo-nav-item .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.demo-nav-item.active {
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* Учётная запись внизу меню, как в сайдбаре системы */
+.demo-account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  padding: 14px 10px 0;
+  border-top: 1px solid var(--line-soft);
+}
+
+.demo-account .user-avatar {
+  width: 32px;
+  height: 32px;
+}
+
+.demo-account .user-avatar .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.demo-account-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.demo-account-name {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.demo-account-role {
+  color: var(--text-light);
+  font-size: 12px;
+}
+
+.demo-content {
+  flex: 1;
+  min-width: 0;
+  padding: 24px 28px 28px;
+  animation: demo-in 0.35s ease-out;
+}
+
+@keyframes demo-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.demo-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 16px 0 0;
+  color: var(--text-light);
+  font-size: 14px;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.demo-note {
+  margin: 6px 0 0;
+  color: var(--text-light);
+  font-size: 12px;
+  text-align: center;
+}
+
+.demo-hint .icon {
+  width: 18px;
+  height: 18px;
+  color: var(--primary);
+}
+
+.demo-page-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+  margin-bottom: 16px;
+}
+
+.demo-page-head h3 {
+  margin: 0 0 2px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.demo-page-sub {
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+.demo-reset.btn {
+  height: 36px;
+  padding: 0 14px;
+  font-size: 14px;
+}
+
+/* Кнопка, растянутая на строку или карточку через ::after: клик в любом месте открывает запись */
+.demo-open {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.demo-open::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.demo-open:focus-visible {
+  outline: none;
+}
+
+.demo-row:has(.demo-open:focus-visible),
+.demo-carrier:has(.demo-open:focus-visible) {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
+/* Поиск и фильтр над таблицей, поля пониже, чем в системе */
+.demo-filters {
+  margin-bottom: 12px;
+}
+
+.demo-filters .input,
+.demo-filters .dropdown-toggle {
+  height: 42px;
+}
+
+.demo-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 32px 16px;
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+/* ---------- Отчёты ---------- */
+
+/* Панель выбора — та же, что в системе (.selection-bar), только кнопки ниже */
+.demo-selection {
+  min-height: 58px;
+  margin-bottom: 12px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.demo-selection .btn {
+  height: 36px;
+  padding: 0 14px;
+  font-size: 14px;
+}
+
+/* На месте панели, пока ничего не выбрано: та же высота, таблица не прыгает */
+.demo-selection-hint {
+  display: flex;
+  align-items: center;
+  min-height: 58px;
+  margin-bottom: 12px;
+  padding: 0 18px;
+  border: 1px dashed var(--field-border);
+  border-radius: var(--radius-lg);
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+.demo-table {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.demo-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 18px 44px 128px minmax(0, 1.2fr) minmax(0, 1fr) 96px 196px;
+  align-items: center;
+  column-gap: 14px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line-soft);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.demo-row:last-child {
+  border-bottom: 0;
+}
+
+.demo-row:hover {
+  background: var(--bg-tint);
+}
+
+.demo-row.selected {
+  background: var(--primary-soft);
+}
+
+.demo-row-head,
+.demo-row-head:hover {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom-color: var(--line);
+  background: var(--bg-subtle);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-light);
+  cursor: default;
+}
+
+.demo-row > span {
+  display: flex;
+  min-width: 0;
+}
+
+/* Чекбокс лежит поверх растянутой кнопки открытия отчёта */
+.demo-row > .demo-check {
+  position: relative;
+  z-index: 1;
+  display: flex;
+}
+
+.demo-row--vehicle {
+  grid-template-columns: 128px minmax(0, 1fr) minmax(0, 1fr) 128px 140px;
+  cursor: default;
+}
+
+.demo-row > .demo-col-make {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.demo-row > .demo-col-waste,
+.demo-row > .demo-col-carrier {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.demo-row > .demo-col-time {
+  color: var(--text-light);
+  font-variant-numeric: tabular-nums;
+}
+
+.demo-row > .demo-col-num {
+  justify-content: flex-end;
+  font-variant-numeric: tabular-nums;
+}
+
+.demo-plate .plate {
+  font-size: 14px;
+}
+
+/* Кнопка открытия отчёта на номере: номер занимает колонку, как без неё */
+.demo-plate .demo-open {
+  display: flex;
+  width: 100%;
+}
+
+.demo-plate .plate-num,
+.demo-plate .plate-region {
+  padding: 5px 0;
+}
+
+/* Бейдж заново появляется при смене статуса (ключ ячейки меняется) */
+.demo-status .badge {
+  animation: demo-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes demo-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+}
+
+/* ---------- Карточка отчёта ---------- */
+
+.demo-report-head {
+  justify-content: flex-start;
+  align-items: center;
+  gap: 14px;
+}
+
+.demo-report-head .back {
+  flex: none;
+  background: none;
+  cursor: pointer;
+}
+
+.demo-summary {
+  margin-bottom: 16px;
+  padding: 16px 20px;
+}
+
+.demo-summary .btn {
+  height: 38px;
+  padding: 0 14px;
+  font-size: 14px;
+}
+
+.demo-weighing .stat {
+  padding: 14px 16px 12px;
+}
+
+.demo-weighing .stat-value {
+  font-size: 24px;
+}
+
+/* Нарисованные «фото» ниже настоящих: карточка помещается в окно */
+.demo-weighing .photo-frame {
+  aspect-ratio: 4 / 3;
+  min-height: 0;
+  max-height: none;
+  margin: 0 12px 12px;
+}
+
+/* Сцены на «фото» одинаковые в обеих темах, как настоящие снимки */
+/* Иллюстрации вместо фото (DemoPhotos.tsx) заполняют рамку целиком */
+.demo-photo {
+  background: #e4ecf2;
+}
+
+.demo-photo-scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.demo-photo--vehicle .photo-plate {
+  top: 10px;
+  right: 10px;
+}
+
+.demo-photo--vehicle .photo-plate .plate {
+  font-size: 14px;
+}
+
+.demo-photo--vehicle .photo-plate .plate-num,
+.demo-photo--vehicle .photo-plate .plate-region {
+  padding: 5px 8px;
+}
+
+/* Отметка, что вес распознан с фото */
+.demo-photo-chip {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #0f6bac;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.photo-frame .demo-photo-chip .icon {
+  width: 12px;
+  height: 12px;
+  stroke-width: 2;
+}
+
+/* ---------- Перевозчики ---------- */
+
+.demo-carrier-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.demo-carrier {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
+}
+
+.demo-carrier:hover {
+  border-color: var(--primary-border);
+  background: var(--bg-tint);
+}
+
+.demo-carrier-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.demo-carrier-name {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.demo-carrier-more {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--text-light);
+  font-size: 13px;
+}
+
+.demo-carrier-more .icon {
+  width: 16px;
+  height: 16px;
+}
+
+.demo-carrier .share {
+  padding: 12px 16px;
+}
+
+.demo-carrier .share-chart {
+  width: 72px;
+  height: 72px;
+}
+
+.demo-carrier .stat-value {
+  font-size: 24px;
+}
+
+.demo-carrier-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.demo-carrier-stats strong {
+  color: var(--text);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Пользователи ---------- */
+
+.demo-user-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.demo-user {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+
+.demo-user-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.demo-user-head h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.demo-user .role-badge {
+  align-self: flex-start;
+  padding: 3px 10px;
+  font-size: 12px;
+}
+
+.demo-user p {
+  flex: 1;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.demo-user-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line-soft);
+  color: var(--text-light);
+  font-size: 13px;
+}
+
+.demo-user-status .icon {
+  width: 15px;
+  height: 15px;
+}
+
+/* ---------- Весовая: телефон и шаги рядом ---------- */
+
+.demo-scale {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 56px;
+  height: 100%;
+}
+
+/* Корпус телефона тёмный в обеих темах, экран вытянут как у смартфона (≈9:19) */
+.phone {
+  flex: none;
+  width: 296px;
+  padding: 9px;
+  border-radius: 46px;
+  background: #15181c;
+  box-shadow:
+    0 0 0 1px #2b3138,
+    0 24px 60px -16px rgba(0, 0, 0, 0.45);
+}
+
+.phone-screen {
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: 9 / 19;
+  overflow: hidden;
+  border-radius: 38px;
+  background: var(--bg-subtle);
+}
+
+/* Строка состояния: время слева, вырез под камеру по центру, значки справа */
+.phone-status {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  flex: none;
+  height: 46px;
+  padding: 0 24px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.phone-island {
+  width: 82px;
+  height: 24px;
+  border-radius: 999px;
+  background: #000;
+}
+
+.phone-status-icons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.phone-status-icons .icon {
+  width: 15px;
+  height: 15px;
+  stroke-width: 2.2;
+}
+
+.phone-app {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  padding: 6px 14px 16px;
+}
+
+.phone-head {
+  display: flex;
+  flex-direction: column;
+  padding: 0 2px;
+}
+
+.phone-title {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.phone-sub {
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+/* Полоса сети: жёлтая без связи, зелёная после отправки */
+.phone-net {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  white-space: nowrap;
+  border-radius: var(--radius-sm);
+  background: var(--warning-soft);
+  color: var(--warning);
+  font-size: 12px;
+  font-weight: 500;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+.phone-net.is-online {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.phone-net .icon {
+  width: 15px;
+  height: 15px;
+}
+
+.phone-card,
+.phone-scale,
+.phone-weights {
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.phone-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+}
+
+.phone-card .plate {
+  width: 150px;
+}
+
+.phone-card-meta {
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+/* Табло весов */
+.phone-scale {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 12px 8px;
+}
+
+/* Подпись в одну строку: табло не меняет высоту при смене шага */
+.phone-scale-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 18px;
+  overflow: hidden;
+  font-size: 12px;
+  white-space: nowrap;
+  color: var(--text-light);
+}
+
+.phone-scale-label .icon {
+  width: 14px;
+  height: 14px;
+  color: var(--primary);
+}
+
+.phone-scale-label .spinner {
+  flex: none;
+}
+
+.phone-scale-value {
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.phone-scale-value small {
+  margin-left: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+.phone-weights {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 0;
+}
+
+.phone-weights div {
+  padding: 8px 12px;
+}
+
+.phone-weights div + div {
+  border-left: 1px solid var(--line-soft);
+}
+
+.phone-weights dt {
+  font-size: 11px;
+  color: var(--text-light);
+}
+
+.phone-weights dd {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.phone-photos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.phone-photo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  height: 64px;
+  border: 1.5px dashed var(--field-border);
+  border-radius: 12px;
+  color: var(--text-faint);
+  font-size: 11px;
+}
+
+/* Снятое фото: ровная заливка без градиента и короткая вспышка камеры */
+.phone-photo.is-taken {
+  border: 1.5px solid var(--primary-border);
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.phone-photo.is-taken::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: #fff;
+  opacity: 0;
+  animation: phone-flash 0.5s ease-out;
+  pointer-events: none;
+}
+
+@keyframes phone-flash {
+  from {
+    opacity: 0.9;
+  }
+}
+
+.phone-photo-check {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: flex;
+  padding: 2px;
+  border-radius: 50%;
+  background: var(--success);
+  color: #fff;
+}
+
+.phone-photo-check .icon {
+  width: 10px;
+  height: 10px;
+  stroke-width: 3;
+}
+
+/* Кнопка действия прижата к низу экрана, как в мобильных приложениях */
+.phone-action.btn {
+  width: 100%;
+  margin-top: auto;
+  border-radius: 14px;
+}
+
+.demo-scale-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  max-width: 320px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.demo-scale-steps li {
+  display: flex;
+  gap: 14px;
+  opacity: 0.5;
+  transition: opacity 0.25s;
+}
+
+.demo-scale-steps li.is-current,
+.demo-scale-steps li.is-done {
+  opacity: 1;
+}
+
+.demo-scale-node {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--primary-border);
+  border-radius: 50%;
+  color: var(--primary);
+  font-size: 14px;
+  font-weight: 600;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+}
+
+.demo-scale-steps li.is-done .demo-scale-node {
+  border-color: var(--success);
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.demo-scale-steps li.is-current .demo-scale-node {
+  border-color: var(--primary-solid);
+  background: var(--primary-solid);
+  color: #fff;
+}
+
+.demo-scale-node .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.demo-scale-steps h4 {
+  margin: 4px 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.demo-scale-steps p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+/* ---------- Аналитика ---------- */
+
+.demo-analytics .stats {
+  margin-bottom: 0;
+}
+
+.demo-analytics .stat-value {
+  font-size: 24px;
+}
+
+.demo-analytics .info-card {
+  padding: 20px;
+}
+
+/* ---------- Плавная прокрутка к якорям и появление блоков ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.about) {
+    scroll-behavior: smooth;
+  }
+
+  @supports (animation-timeline: view()) {
+    .about-reveal > *,
+    .about-request {
+      animation: demo-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .demo-content,
+  .demo-status .badge,
+  .phone-photo.is-taken::after {
+    animation: none;
+  }
+}
+
+/* ---------- Узкие экраны ---------- */
+
+@media (max-width: 1000px) {
+  .demo-nav {
+    width: auto;
+  }
+
+  .demo-nav .logo,
+  .demo-nav-item span,
+  .demo-account-info {
+    display: none;
+  }
+
+  .demo-account {
+    padding: 14px 0 0;
+    justify-content: center;
+  }
+
+  .demo-row {
+    grid-template-columns: 18px 44px 128px minmax(0, 1fr) 96px 196px;
+  }
+
+  .demo-row > .demo-col-carrier {
+    display: none;
+  }
+
+  .demo-row--vehicle {
+    grid-template-columns: 128px minmax(0, 1fr) 128px 140px;
+  }
+
+  .demo-user-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .demo-scale {
+    gap: 32px;
+  }
+}
+
+/* Окно без меню; в строке отчёта номер и вес, статус под ними */
+@media (max-width: 860px) {
+  .demo-nav {
+    display: none;
+  }
+
+  .demo-screen {
+    min-height: 0;
+  }
+
+  .demo-content {
+    padding: 18px 16px 20px;
+  }
+
+  .demo-row {
+    grid-template-columns: 18px 128px minmax(0, 1fr);
+    row-gap: 8px;
+  }
+
+  .demo-row > .demo-col-time,
+  .demo-row > .demo-col-waste,
+  .demo-row > .demo-col-make {
+    display: none;
+  }
+
+  .demo-row--vehicle {
+    grid-template-columns: 128px minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .demo-carrier-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .demo-status {
+    grid-column: 2 / -1;
+  }
+
+  .demo-row-head .demo-status-head {
+    display: none;
+  }
+
+  .demo-scale {
+    flex-direction: column;
+  }
+
+  .demo-analytics .stats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .demo-tab {
+    padding: 0 12px;
+  }
+
+  .demo-tab .icon {
+    display: none;
+  }
+
+  .phone {
+    width: min(100%, 296px);
+  }
+}

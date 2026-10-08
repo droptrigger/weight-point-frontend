@@ -1,0 +1,158 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 18px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none; /* .btn бывает и у ссылок */
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
+}
+
+.btn .icon {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--focus-outline);
+  outline-offset: 2px;
+}
+
+.btn--primary {
+  background: var(--primary-solid);
+  color: #fff;
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: var(--primary-solid-hover);
+}
+
+.btn--ghost {
+  border-color: var(--field-border);
+  background: var(--surface);
+  color: var(--text-muted);
+}
+
+.btn--ghost:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+
+.btn--soft {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.btn--soft:hover:not(:disabled) {
+  background: var(--primary-soft-hover);
+}
+
+.btn--danger {
+  background: var(--danger-strong);
+  color: #fff;
+}
+
+.btn--danger:hover:not(:disabled) {
+  background: var(--danger-solid-hover);
+}
+
+.btn--danger-soft {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.btn--danger-soft:hover:not(:disabled) {
+  background: var(--danger-soft-hover);
+}
+
+/* Ссылка-кнопка во всю ширину карточки */
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  border-radius: var(--radius);
+  background: var(--primary-solid);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.btn-primary:hover {
+  background: var(--primary-solid-hover);
+}
+
+/* Идущая операция не должна выглядеть как недоступная кнопка. Курсор обычный: ход операции
+   показывает спиннер в самой кнопке */
+.btn[aria-busy='true']:disabled {
+  opacity: 0.85;
+  cursor: default;
+}
+
+/* Компактная кнопка: заголовки секций, строки списков */
+.btn.btn--sm {
+  height: 36px;
+  padding: 0 14px;
+  font-size: 14px;
+}
+
+.btn.btn--sm .icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Квадратная кнопка с иконкой без подписи */
+.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius);
+  background: none;
+  color: var(--text-light);
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+.icon-btn .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.icon-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.icon-btn:focus-visible {
+  outline: 3px solid var(--focus-outline);
+  outline-offset: 2px;
+}
+
+.icon-btn--danger:hover:not(:disabled) {
+  background: var(--danger-soft);
+  color: var(--danger);
+}

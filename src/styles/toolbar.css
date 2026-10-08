@@ -1,0 +1,162 @@
+/* ---------- Фильтры ---------- */
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.span-2 {
+  grid-column: span 2;
+}
+.span-3 {
+  grid-column: span 3;
+}
+.span-4 {
+  grid-column: span 4;
+}
+
+.search-field {
+  position: relative;
+  display: block;
+  min-width: 0;
+}
+
+.search-field .input {
+  padding-left: 44px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  color: var(--text-light);
+  pointer-events: none;
+}
+
+/* ---------- Панель над списком ---------- */
+
+.list-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  min-height: 40px;
+  margin: 14px 0 8px;
+}
+
+.list-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-left: 4px;
+}
+
+.count {
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+.reset {
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: var(--primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.reset:hover {
+  color: var(--danger-strong);
+}
+
+/* ---------- Пагинация ---------- */
+
+.pager {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+}
+
+.pager-size {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pager-size-label {
+  font-size: 14px;
+  color: var(--text-light);
+  white-space: nowrap;
+}
+
+.pager-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pager-btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+.pager-btn:hover:not(:disabled):not(.active) {
+  background: var(--bg-active);
+}
+
+.pager-btn.active {
+  background: var(--primary-soft);
+  color: var(--primary);
+  cursor: default;
+}
+
+.pager-btn:disabled {
+  color: var(--text-faint);
+  cursor: default;
+}
+
+.pager-dots {
+  min-width: 24px;
+  text-align: center;
+  color: var(--text-light);
+}
+
+@media (max-width: 1100px) {
+  .filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .filters > .search-field {
+    grid-column: 1 / -1;
+  }
+
+  /* Поиск занимает строку целиком, остальные идут парами: последний без пары растянут, чтобы не оставалось пустой ячейки */
+  .filters > .search-field:first-child ~ :last-child:nth-child(even) {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Отметка «Показывать неактивные» рядом со счётчиком */
+.inactive-toggle {
+  color: var(--text-light);
+  white-space: nowrap;
+}

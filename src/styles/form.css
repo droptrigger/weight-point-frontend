@@ -1,0 +1,367 @@
+.form-field {
+  min-width: 0;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+.input {
+  width: 100%;
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid var(--field-border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  outline: none;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s,
+    background-color 0.15s;
+}
+
+.input::placeholder {
+  color: var(--text-light);
+}
+
+.input:hover {
+  border-color: var(--field-border-hover);
+}
+
+.input:focus {
+  border-color: var(--primary);
+  box-shadow: var(--focus-ring);
+}
+
+.input.invalid {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.check-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* ---------- Чекбокс ---------- */
+
+/* Свой вид вместо системного: скругление, рамка и фокус как у полей ввода, отметка на заливке
+   --primary-solid (белая галочка читается в обеих темах). indeterminate — «выбраны не все» */
+input[type='checkbox'] {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  border: 1.5px solid var(--field-border);
+  border-radius: 5px;
+  background: var(--surface) center / 12px 12px no-repeat;
+  cursor: pointer;
+  appearance: none;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+
+input[type='checkbox']:hover:not(:disabled) {
+  border-color: var(--primary);
+}
+
+input[type='checkbox']:focus-visible {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: var(--focus-ring);
+}
+
+input[type='checkbox']:checked,
+input[type='checkbox']:indeterminate {
+  border-color: var(--primary-solid);
+  background-color: var(--primary-solid);
+}
+
+input[type='checkbox']:checked:hover:not(:disabled),
+input[type='checkbox']:indeterminate:hover:not(:disabled) {
+  border-color: var(--primary-solid-hover);
+  background-color: var(--primary-solid-hover);
+}
+
+input[type='checkbox']:checked {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 8.5l3 3 6-7'/%3E%3C/svg%3E");
+}
+
+input[type='checkbox']:indeterminate {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M4 8h8'/%3E%3C/svg%3E");
+}
+
+input[type='checkbox']:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
+/* ---------- Выбор файла ---------- */
+
+.file-drop {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 64px;
+  padding: 8px 12px 8px 8px;
+  border: 1px dashed var(--field-border-hover);
+  border-radius: var(--radius);
+  background: var(--bg-hover);
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s,
+    background-color 0.15s;
+}
+
+.file-drop:hover,
+.file-drop.is-dragging {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+}
+
+.file-drop:has(.file-drop-input:focus-visible) {
+  border-color: var(--primary);
+  box-shadow: var(--focus-ring);
+}
+
+.file-drop.has-file {
+  border-style: solid;
+  border-color: var(--field-border);
+  background: var(--surface);
+}
+
+.file-drop.has-file:hover {
+  border-color: var(--field-border-hover);
+}
+
+.file-drop.invalid {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+}
+
+/* Невидимый input поверх карточки ловит клик и перетаскивание */
+.file-drop-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.file-drop-icon,
+.file-drop-thumb {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+}
+
+.file-drop-icon {
+  display: grid;
+  place-items: center;
+  background: var(--surface);
+  color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.file-drop.invalid .file-drop-icon {
+  color: var(--danger);
+}
+
+.file-drop-thumb {
+  display: block;
+  background: var(--bg-muted);
+  object-fit: cover;
+}
+
+.file-drop-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.file-drop-title {
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-drop:not(.has-file) .file-drop-title {
+  color: var(--primary);
+}
+
+.file-drop-hint {
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+/* Кнопка лежит над невидимым input, иначе клик открыл бы выбор файла */
+.file-drop-remove {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--text-light);
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+.file-drop-remove .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.file-drop-remove:hover {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.file-drop-remove:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+.field-error {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--danger);
+}
+
+.field-error:empty,
+.modal-error:empty {
+  display: none;
+}
+
+.modal-error {
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ---------- Вход ---------- */
+
+.auth {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 16px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 410px;
+}
+
+.auth-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.auth-logo {
+  margin: 0 0 10px;
+}
+
+.auth-logo svg {
+  display: block;
+  width: auto;
+  height: 112px;
+}
+
+.auth-subtitle {
+  font-size: 15px;
+  color: var(--text-light);
+}
+
+.auth-about {
+  display: block;
+  margin-top: 24px;
+  font-size: 14px;
+  color: var(--text-light);
+  text-align: center;
+}
+
+.auth-about:hover {
+  color: var(--primary);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.auth-form .btn {
+  width: 100%;
+  height: 52px;
+  margin-top: 6px;
+}
+
+.pw {
+  position: relative;
+}
+
+.pw .input {
+  padding-right: 48px;
+}
+
+.pw button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 100%;
+  border: 0;
+  background: none;
+  color: var(--text-light);
+  cursor: pointer;
+}
+.modal-error--spaced {
+  margin-top: 12px;
+}
+
+/* Многострочное поле: высота по содержимому, тянется только вниз */
+.input.input--textarea {
+  height: auto;
+  min-height: 96px;
+  padding: 12px 14px;
+  line-height: 1.5;
+  resize: vertical;
+}

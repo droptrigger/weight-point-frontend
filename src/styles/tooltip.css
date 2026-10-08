@@ -1,0 +1,44 @@
+/* Подсказка при наведении (shared/ui/Tooltip.tsx), вместо системного title */
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  max-width: 260px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-shadow: var(--shadow-pop);
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text);
+  pointer-events: none;
+  animation: tooltip-in 0.12s ease-out;
+}
+
+.tooltip-title {
+  display: block;
+  margin-bottom: 2px;
+  font-weight: 600;
+}
+
+.tooltip-text {
+  color: var(--text-muted);
+}
+
+@keyframes tooltip-in {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+}
+
+.tooltip.is-below {
+  animation-name: tooltip-in-below;
+}
+
+@keyframes tooltip-in-below {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+}

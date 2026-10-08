@@ -1,0 +1,93 @@
+/* Нативный <dialog> — прозрачный слой на весь экран. Если окно выше экрана, прокручивается
+   слой, а не содержимое окна: выпадающие списки внутри окна не обрезаются */
+dialog.modal {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 16px;
+  border: 0;
+  background: none;
+  color: var(--text);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+dialog.modal[open] {
+  display: flex;
+}
+
+/* margin: auto центрирует окно, а когда оно выше экрана — прижимает к верху без обрезки */
+.modal-panel {
+  width: 100%;
+  max-width: 440px;
+  margin: auto;
+  padding: 24px;
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--shadow-modal);
+  animation: modal-in 0.18s ease-out;
+}
+
+.modal-panel--wide {
+  max-width: 600px;
+}
+
+dialog.modal::backdrop {
+  background: rgba(15, 23, 42, 0.45);
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+.modal-title {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.modal-text {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.modal-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 12px;
+  margin-top: 16px;
+}
+
+.modal-form > .form-field,
+.modal-form > .modal-error {
+  flex: 1 1 100%;
+}
+
+.modal-form > .form-field.half {
+  flex: 1 1 calc(50% - 6px);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.modal-form > .modal-actions {
+  margin-top: 10px;
+}
+
+/* На узком экране поля в полстроки не помещают подписи — поэтому они во всю ширину */
+@media (max-width: 560px) {
+  .modal-form > .form-field.half {
+    flex-basis: 100%;
+  }
+}

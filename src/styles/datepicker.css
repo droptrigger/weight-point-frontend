@@ -1,0 +1,407 @@
+.dropdown-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--text-light);
+}
+
+.dropdown.is-set .dropdown-icon {
+  color: var(--primary);
+}
+
+.dropdown-label.is-placeholder {
+  color: var(--text-light);
+}
+
+/* ---------- Всплывающий календарь ---------- */
+
+/* Не уже поля, из которого открыт; на узком экране не вылезает за край */
+.datepicker-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 30;
+  width: max(100%, 320px);
+  max-width: calc(100vw - 32px);
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-pop);
+  animation: dropdown-in 0.14s ease-out;
+}
+
+/* Снизу не хватает места — календарь над полем */
+.datepicker-popover.is-up {
+  top: auto;
+  bottom: calc(100% + 6px);
+}
+
+/* Быстрый выбор: чипы по ширине текста растягиваются на всю строку и переносятся */
+.datepicker-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-bottom: 14px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.preset {
+  flex: 1 1 auto;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--field-border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+}
+
+.preset:hover {
+  background: var(--bg-hover);
+}
+
+.preset.active {
+  border-color: var(--primary-border);
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.preset:focus-visible,
+.datepicker-nav:focus-visible,
+.day:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+.datepicker-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.datepicker-title {
+  flex: 1;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.datepicker-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.datepicker-nav .icon {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2.2;
+}
+
+.datepicker-nav:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+
+.datepicker-nav:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* ---------- Дни ---------- */
+
+.datepicker-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  row-gap: 2px;
+}
+
+.datepicker-weekday {
+  padding: 6px 0;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+.datepicker-weekday.is-weekend {
+  color: var(--text-faint);
+}
+
+/* Кнопка занимает всю ячейку и рисует полосу диапазона, кружок дня — внутренний span */
+.day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.day > span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  transition: background-color 0.12s;
+}
+
+.day:hover:not(:disabled) > span {
+  background: var(--bg-hover);
+}
+
+.day.is-today > span {
+  box-shadow: inset 0 0 0 1px var(--primary-border);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.day.in-range {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.day.in-range:hover > span {
+  background: var(--primary-soft);
+}
+
+/* Края диапазона: полоса уходит только внутрь периода */
+.day.is-start.in-band {
+  background: linear-gradient(to right, transparent 50%, var(--primary-soft) 50%);
+}
+
+.day.is-end.in-band {
+  background: linear-gradient(to left, transparent 50%, var(--primary-soft) 50%);
+}
+
+.day.is-start > span,
+.day.is-end > span,
+.day.is-start:hover > span,
+.day.is-end:hover > span {
+  background: var(--primary-solid);
+  box-shadow: none;
+  color: #fff;
+  font-weight: 600;
+}
+
+.day:disabled {
+  color: var(--text-faint);
+  cursor: default;
+}
+
+/* ---------- Подвал ---------- */
+
+.datepicker-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 24px;
+  padding-top: 12px;
+  margin-top: 10px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.datepicker-hint {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+.datepicker-hint.is-picking {
+  color: var(--primary);
+  font-weight: 500;
+}
+
+/* ---------- Дата и время: календарь и колонки часов и минут ---------- */
+
+.datepicker-popover:has(.datetime-body) {
+  width: auto;
+}
+
+.datetime-body {
+  display: flex;
+  gap: 8px;
+}
+
+.datetime-calendar {
+  width: 280px;
+  flex-shrink: 0;
+}
+
+/* Колонка по высоте календаря: список лежит внутри абсолютно и прокручивается */
+.time-col {
+  position: relative;
+  width: 56px;
+  padding-left: 8px;
+  border-left: 1px solid var(--line-soft);
+}
+
+.time-col + .time-col {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.time-col-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+.time-list {
+  position: absolute;
+  inset: 38px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.datetime-calendar + .time-col .time-list {
+  left: 8px;
+}
+
+.time-list::-webkit-scrollbar {
+  display: none;
+}
+
+.time-item {
+  flex: none;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background-color 0.12s;
+}
+
+.time-item:hover {
+  background: var(--bg-hover);
+}
+
+.time-item.selected {
+  background: var(--primary-solid);
+  color: #fff;
+  font-weight: 600;
+}
+
+.time-item:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
+.datetime-now {
+  flex: none;
+}
+
+.datetime-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* На узком экране колонки времени уходят под календарь */
+@media (max-width: 520px) {
+  .datetime-body {
+    flex-wrap: wrap;
+  }
+
+  .datetime-calendar {
+    width: 100%;
+  }
+
+  .time-col {
+    flex: 1;
+    height: 200px;
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .datetime-calendar + .time-col .time-list {
+    left: 0;
+  }
+}
+
+/* ---------- Поле даты и времени с ручным вводом ---------- */
+
+.datetime-toggle {
+  padding-right: 6px;
+  cursor: text;
+}
+
+.datetime-toggle:focus-within {
+  border-color: var(--primary);
+  box-shadow: var(--focus-ring);
+}
+
+.datetime-input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  outline: none;
+}
+
+.datetime-input::placeholder {
+  color: var(--text-light);
+}
+
+.datetime-open {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: var(--radius);
+  background: none;
+  cursor: pointer;
+}
+
+.datetime-open:hover {
+  background: var(--bg-hover);
+}
+
+.datetime-open:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}

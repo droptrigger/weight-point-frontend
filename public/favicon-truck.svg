@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <!-- зазор вокруг колёс -->
+    <mask id="arches" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="17" cy="44" r="8.6" fill="#000"/>
+      <circle cx="48" cy="44" r="8.6" fill="#000"/>
+    </mask>
+  </defs>
+  <g fill="#0a63b8">
+    <g mask="url(#arches)">
+      <!-- кузов мусоровоза со скошенным задним бортом и рёбрами -->
+      <path fill-rule="evenodd" d="M2.5,38 L7.6,19.4 Q8.2,17.4 9.8,16 L16,10.4 Q17.6,9 19.8,9 H35 Q38,9 38,12 V38 Z
+        M17.2,14.5 H19.9 L15.9,30.5 H13.2 Z M24.2,14.5 H26.9 L22.9,30.5 H20.2 Z M31.2,14.5 H33.9 L29.9,30.5 H27.2 Z"/>
+      <!-- кабина с окном -->
+      <path fill-rule="evenodd" d="M41,15 H50.4 Q52.9,15 54.2,17.2 L59.4,26 Q60,27.1 60,28.3 V38 H41 Z M45,19 V26.6 H55 L51.3,20.1 Q50.7,19 49.5,19 Z"/>
+      <!-- рама -->
+      <rect x="2.5" y="37" width="57.5" height="6" rx="1.5"/>
+    </g>
+    <!-- колёса -->
+    <circle cx="17" cy="44" r="6.2"/>
+    <circle cx="48" cy="44" r="6.2"/>
+    <!-- платформа весов -->
+    <path d="M8,53 H56 L62,61 H2 Z"/>
+  </g>
+</svg>

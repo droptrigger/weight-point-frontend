@@ -1,0 +1,580 @@
+.section-title {
+  margin: 28px 0 10px;
+  padding: 0 4px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* ---------- Карточки со статистикой ---------- */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.stats-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.stat {
+  padding: 18px 20px 16px;
+  border-radius: var(--radius-lg);
+  background: var(--bg-muted);
+}
+
+.stat-label {
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+.stat-value {
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.stat-sub {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+.stat-active {
+  background: var(--primary-soft);
+}
+
+.stat-active .stat-label,
+.stat-active .stat-value,
+.stat-active .stat-sub {
+  color: var(--primary);
+}
+
+.stat-danger .stat-value {
+  color: var(--danger);
+}
+
+/* Компактные плитки в боковой колонке: две колонки, из трёх плиток выделенная — на всю ширину */
+.stats.stats-compact {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 0;
+}
+
+.stats-compact .stat {
+  padding: 16px 18px 14px;
+}
+
+.stats-compact .stat-value {
+  font-size: 24px;
+  overflow-wrap: anywhere;
+}
+
+.stats-compact.stats-3 .stat-active {
+  grid-column: 1 / -1;
+  order: -1;
+}
+
+.stats-compact.stats-3 .stat-active .stat-value {
+  font-size: 30px;
+}
+
+.state-compact {
+  padding: 24px;
+  border: 1px dashed var(--field-border);
+  border-radius: var(--radius-lg);
+}
+
+/* ---------- Карточка сущности ---------- */
+
+.info-card {
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+
+.entity-card {
+  max-width: 640px;
+}
+
+.entity-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.entity-head-aside {
+  flex: none;
+  margin-left: auto;
+}
+
+.entity-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.info-list {
+  margin: 18px 0 20px;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 52px;
+  border-bottom: 1px solid var(--line-soft);
+  font-size: 15px;
+}
+
+.info-row:last-child {
+  border-bottom: 0;
+}
+
+.info-row dt {
+  color: var(--text-light);
+}
+
+.info-row dd {
+  min-width: 0;
+  margin: 0;
+  font-weight: 600;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.info-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.info-link .icon {
+  width: 16px;
+  height: 16px;
+  color: var(--text-faint);
+  transition:
+    color 0.15s,
+    transform 0.15s;
+}
+
+.info-link:hover,
+.info-link:hover .icon {
+  color: var(--primary);
+}
+
+.info-link:hover .icon {
+  transform: translateX(2px);
+}
+
+.entity-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.detail-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius);
+  background: var(--primary-soft);
+  color: var(--primary);
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+.detail-icon-lg {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+}
+
+.detail-icon-lg .icon {
+  width: 28px;
+  height: 28px;
+}
+
+/* ---------- Сводка отчёта ---------- */
+
+.summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px 32px;
+  padding: 20px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+
+.summary-left {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px 20px;
+}
+
+.summary-right {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px 40px;
+}
+
+/* Кнопки действий прямо в сводке, чтобы не листать до них. В одной строке со сводкой их прижимает
+   вправо растянутый сосед, а перенесённые на новую строку они стоят у левого края */
+.summary-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.summary > :has(+ .summary-actions) {
+  flex-grow: 1;
+}
+
+.summary-date {
+  font-size: 15px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Взвешивание: вес и его фото в одной колонке ---------- */
+
+.weighing {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+
+.weigh-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.weigh-card > .stat {
+  padding-bottom: 14px;
+  border-radius: 0;
+  background: var(--surface);
+}
+
+/* Фото снимают на телефон, чаще всего вертикально: рамка 3:4 и снимок целиком, без обрезки,
+   чтобы показания весов читались без открытия. По высоте — чтобы страница влезала в экран */
+.weigh-card .photo-frame {
+  width: auto;
+  aspect-ratio: 3 / 4;
+  min-height: 280px;
+  max-height: calc(100vh - 420px);
+  margin: 0 12px;
+  border-radius: var(--radius-sm);
+}
+
+.weigh-card .photo-info {
+  flex-wrap: nowrap;
+  min-height: 56px;
+  padding: 10px 12px 12px 16px;
+}
+
+.weigh-card .photo-status {
+  text-align: left;
+}
+
+.weigh-card .photo-replace {
+  flex: none;
+}
+
+.weigh-card .photo-frame img {
+  object-fit: contain;
+}
+
+.weigh-card .photo-frame.has-img:hover img {
+  transform: scale(1.03);
+}
+
+/* ---------- Детали отчёта: кликабельные группы ---------- */
+
+.details {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.detail-group {
+  position: relative;
+  display: grid;
+  /* Колонка стрелки фиксированная: без ссылки поля не съезжают относительно других групп */
+  grid-template-columns: 220px minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: 16px 24px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.detail-group:last-child {
+  border-bottom: 0;
+}
+
+.detail-group:hover {
+  background: var(--bg-tint);
+}
+
+.detail-group:hover .detail-icon {
+  background: var(--primary-solid);
+  color: #fff;
+}
+
+.detail-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.detail-head h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Ссылка в заголовке растянута на всю группу */
+.detail-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.detail-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.detail-link:focus-visible {
+  outline: 0;
+}
+
+.detail-link:focus-visible::after {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
+.detail-arrow {
+  color: var(--text-faint);
+  transition:
+    color 0.15s,
+    transform 0.15s;
+}
+
+.detail-group:hover .detail-arrow {
+  color: var(--primary);
+  transform: translateX(3px);
+}
+
+.detail-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px 24px;
+  margin: 0;
+}
+
+.field dt {
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+.field dd {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+/* Ссылки внутри группы кликаются отдельно от растянутой ссылки */
+.field-link {
+  position: relative;
+  z-index: 1;
+  color: inherit;
+  text-decoration: none;
+}
+
+.field-link:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+/* ---------- Страница сущности: карточка слева, аналитика справа ---------- */
+
+.detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.detail-layout .entity-card {
+  max-width: none;
+}
+
+.detail-side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+@media (max-width: 1100px) {
+  .detail-group {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .detail-fields {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 800px) {
+  .stats,
+  .weighing,
+  .detail-layout,
+  .detail-fields {
+    grid-template-columns: 1fr;
+  }
+}
+.entity-actions--flat {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.entity-actions--spaced {
+  margin-top: 12px;
+  padding-top: 0;
+  border-top: 0;
+}
+
+/* Заголовок сразу под карточками статистики: у .stats уже есть отступ снизу */
+.stats + .section-title {
+  margin-top: 0;
+}
+
+/* ---------- Доля от общего объёма ---------- */
+
+.share {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 20px;
+  border-radius: var(--radius-lg);
+  background: var(--bg-muted);
+}
+
+.share-chart {
+  flex: none;
+  width: 96px;
+  height: 96px;
+}
+
+.share-chart .skeleton {
+  height: 100%;
+  border-radius: 50%;
+}
+
+.share-chart svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* Дуга начинается сверху и идёт по часовой стрелке */
+  transform: rotate(-90deg);
+}
+
+.share-chart circle {
+  fill: none;
+  stroke-width: 16;
+}
+
+.share-track {
+  stroke: var(--line);
+}
+
+.share-arc {
+  stroke: var(--primary-solid);
+}
+
+.share-text {
+  min-width: 0;
+}
+
+.share-text .stat-label {
+  margin: 4px 0 0;
+}
+
+/* ---------- История статусов отчёта ---------- */
+
+.status-history {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.status-history-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.status-history-item:last-child {
+  border-bottom: 0;
+}
+
+.status-history-meta {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.status-history-comment {
+  flex: 1 1 100%;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Текст ошибки ФГИС УТКО: то, что нужно исправить перед повторной отправкой */
+.status-history-comment--error {
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  background: var(--danger-soft);
+  color: var(--danger);
+}

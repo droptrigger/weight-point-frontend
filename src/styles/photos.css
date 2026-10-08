@@ -1,0 +1,450 @@
+.photo {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.photo-frame {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  padding: 0;
+  border: 0;
+  background: var(--bg-muted);
+  color: var(--text-faint);
+  font-size: 14px;
+  overflow: hidden;
+}
+
+.photo-frame .icon {
+  width: 40px;
+  height: 40px;
+  stroke-width: 1.4;
+}
+
+.photo-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.25s ease;
+}
+
+.photo-frame.has-img {
+  cursor: zoom-in;
+}
+
+.photo-frame.has-img:hover img {
+  transform: scale(1.04);
+}
+
+.photo-frame.has-img::after {
+  content: 'Открыть';
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.photo-frame.has-img:hover::after,
+.photo-frame.has-img:focus-visible::after {
+  opacity: 1;
+}
+
+.photo-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+}
+
+/* Кнопка замены фото отчёта — отдельной строкой под подписью */
+.photo-replace {
+  flex: 1 1 100%;
+}
+
+.photo-name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.photo-status {
+  font-size: 13px;
+  text-align: right;
+  color: var(--text-light);
+}
+
+.photo-status.ok {
+  color: var(--primary);
+}
+
+/* Фото машины тянется на высоту правой колонки (аналитика + карточка) */
+.vehicle-photo {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+}
+
+.vehicle-photo .photo-frame,
+.vehicle-photo > .skeleton {
+  flex: 1;
+  min-height: 240px;
+  aspect-ratio: auto;
+}
+
+/* Растянутая рамка не задаёт картинке высоту в процентах — поэтому она лежит поверх */
+.vehicle-photo .photo-frame img {
+  position: absolute;
+  inset: 0;
+}
+
+@media (max-width: 800px) {
+  .vehicle-photo .photo-frame {
+    flex: none;
+    aspect-ratio: 4 / 3;
+  }
+}
+
+/* ---------- Просмотр фото ---------- */
+
+dialog.viewer {
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 24px;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  overflow: hidden;
+}
+
+dialog.viewer[open] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+dialog.viewer::backdrop {
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.viewer-figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 100%;
+  margin: 0;
+}
+
+.viewer-figure img {
+  display: block;
+  max-width: min(92vw, 1100px);
+  max-height: calc(100vh - 120px);
+  border-radius: var(--radius-lg);
+  background: #111;
+  object-fit: contain;
+}
+
+.viewer-caption {
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+.viewer-btn {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.viewer-btn:hover {
+  background: rgba(255, 255, 255, 0.26);
+}
+
+.viewer-close {
+  top: 20px;
+  right: 20px;
+}
+
+.viewer-prev,
+.viewer-next {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.viewer-prev {
+  left: 20px;
+}
+.viewer-next {
+  right: 20px;
+}
+
+/* ---------- Фото, вписанное в рамку, с наложениями поверх самого снимка ---------- */
+
+/* Рамка задаёт размер сама, без содержимого: от неё считаются единицы cqw/cqh */
+.photo-frame--fit {
+  container-type: size;
+}
+
+/* Обёртка ровно по снимку: --ratio приходит после загрузки, до неё — вертикальное 3:4 */
+.photo-fit {
+  --ratio: 0.75;
+  position: relative;
+  display: block;
+  flex: none;
+  width: min(100cqw, 100cqh * var(--ratio));
+  aspect-ratio: var(--ratio);
+}
+
+.photo-frame .photo-fit img {
+  object-fit: cover;
+}
+
+/* Госномер в правом верхнем углу снимка, с отступом от краёв; клик проходит к фото */
+.photo-plate {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: block;
+  pointer-events: none;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+}
+
+/* Рамка фото красит текст в серый: номер всегда чёрный */
+.photo-plate .plate {
+  color: #000;
+  font-size: 20px;
+}
+
+.photo-plate .plate-num {
+  padding: 9px 14px;
+}
+
+.photo-plate .plate-region {
+  width: auto;
+  padding: 9px 10px;
+}
+
+/* На странице машины фото крупное: номер тоже крупнее */
+.vehicle-photo .photo-plate {
+  top: 16px;
+  right: 16px;
+}
+
+.vehicle-photo .photo-plate .plate {
+  border-width: 3px;
+  border-radius: var(--radius);
+  font-size: 30px;
+}
+
+.vehicle-photo .photo-plate .plate-num {
+  padding: 14px 22px;
+  border-right-width: 3px;
+}
+
+.vehicle-photo .photo-plate .plate-region {
+  min-width: 72px;
+  padding: 14px 16px;
+}
+
+@media (max-width: 800px) {
+  .vehicle-photo .photo-plate .plate {
+    font-size: 22px;
+  }
+
+  .vehicle-photo .photo-plate .plate-num {
+    padding: 10px 16px;
+  }
+
+  .vehicle-photo .photo-plate .plate-region {
+    min-width: 0;
+    padding: 10px 12px;
+  }
+}
+
+/* ---------- Фото в процессе загрузки и с ошибкой (LoadingImage) ---------- */
+
+/* Пока снимок не загрузился, его не видно: недогруженная картинка не мелькает, видна заглушка */
+img.loading-img {
+  opacity: 0;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+img.loading-img.is-loaded {
+  opacity: 1;
+}
+
+.img-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--text-light);
+}
+
+.img-loading {
+  --img-shimmer: var(--skeleton-highlight-color);
+  overflow: hidden;
+  background: var(--bg-muted);
+}
+
+/* Тот же блик, что у Skeleton; ::before — чтобы спиннер оставался поверх */
+.img-loading::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, var(--img-shimmer), transparent);
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+.img-loading .spinner {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  border-width: 3px;
+}
+
+.img-error {
+  background: var(--bg-muted);
+}
+
+.img-error .icon {
+  width: 28px;
+  height: 28px;
+  stroke-width: 1.6;
+  color: var(--text-faint);
+}
+
+.img-retry {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+  padding: 5px 12px;
+  border: 1px solid var(--field-border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-muted);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.img-retry:hover {
+  background: var(--bg-hover);
+}
+
+.img-retry:focus-visible {
+  outline: 3px solid var(--focus-outline);
+  outline-offset: 2px;
+}
+
+.img-retry .icon {
+  width: 14px;
+  height: 14px;
+  stroke-width: 2.2;
+  color: currentColor;
+}
+
+/* «Открыть» и увеличение при наведении — только у загруженного снимка */
+.photo-frame:has(.img-overlay)::after {
+  display: none;
+}
+
+.photo-frame.has-img:hover img.loading-img:not(.is-loaded) {
+  transform: none;
+}
+
+/* В просмотрщике пустой рамке нужен размер, пока снимок не задал свой */
+.viewer-img {
+  position: relative;
+}
+
+.viewer-img:has(> .img-overlay) {
+  width: min(92vw, 720px);
+  aspect-ratio: 4 / 3;
+}
+
+.viewer-img:has(> .img-overlay) img {
+  position: absolute;
+}
+
+.viewer .img-overlay {
+  border-radius: var(--radius-lg);
+  background: #111;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 14px;
+}
+
+.viewer .img-loading {
+  --img-shimmer: rgba(255, 255, 255, 0.06);
+}
+
+.viewer .img-loading .spinner {
+  width: 36px;
+  height: 36px;
+  border-color: rgba(255, 255, 255, 0.2);
+  border-top-color: #fff;
+}
+
+.viewer .img-error .icon {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.viewer .img-retry {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.viewer .img-retry:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.viewer .img-retry .icon {
+  color: currentColor;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .img-loading::before {
+    animation: none;
+  }
+}

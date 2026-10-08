@@ -1,0 +1,572 @@
+/* Колонки списков: шапка и строки берут --cols у карточки */
+/* Отчёты: чекбокс у проверяющих, затем кнопка раскрытия фото */
+.list-reports {
+  --cols: 28px 110px minmax(0, 1fr) 132px 100px 100px 110px 200px;
+}
+.list-reports--select {
+  --cols: 20px 28px 110px minmax(0, 1fr) 132px 100px 100px 110px 200px;
+}
+/* Без колонки полигона (все, кроме разработчика): колонки делят ширину поровну */
+.list-reports--own {
+  --cols: 28px minmax(110px, 1fr) minmax(132px, 1fr) repeat(3, minmax(100px, 1fr))
+    minmax(200px, 1.4fr);
+}
+.list-reports--own.list-reports--select {
+  --cols: 20px 28px minmax(110px, 1fr) minmax(132px, 1fr) repeat(3, minmax(100px, 1fr))
+    minmax(200px, 1.4fr);
+}
+.list-vehicles {
+  --cols: 132px 200px minmax(0, 1fr) 20px;
+}
+/* Роль шире самой длинной («Администрация организации»): чипс не упирается в стрелку */
+.list-users {
+  --cols: minmax(0, 1.1fr) minmax(0, 1.2fr) 240px 20px;
+}
+.list-carriers {
+  --cols: minmax(0, 1fr) 20px;
+}
+.list-landfills {
+  --cols: minmax(0, 1fr) 220px 20px;
+}
+.list-waste {
+  --cols: 200px minmax(0, 1fr) 170px 20px;
+}
+
+.report-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.report-head,
+.report-row {
+  display: grid;
+  grid-template-columns: var(--cols);
+  align-items: center;
+  column-gap: 16px;
+  padding-right: 20px;
+  padding-left: 20px;
+}
+
+.report-head {
+  padding-top: 11px;
+  padding-bottom: 11px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-subtle);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+.report-row {
+  padding-top: 13px;
+  padding-bottom: 13px;
+  border-bottom: 1px solid var(--line-soft);
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.report-row:last-child {
+  border-bottom: 0;
+}
+
+.report-row:hover {
+  background: var(--bg-tint);
+}
+
+.report-row:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
+.loading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.empty {
+  padding: 32px 0;
+  text-align: center;
+  font-size: 15px;
+  color: var(--text-light);
+}
+
+/* ---------- Ячейки ---------- */
+
+.cell {
+  min-width: 0;
+  font-size: 15px;
+}
+
+.cell-name {
+  font-weight: 600;
+}
+
+.cell-landfill,
+.cell-email {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cell-landfill {
+  font-weight: 500;
+}
+
+.cell-email {
+  color: var(--text-muted);
+}
+
+.cell-num,
+.cell-time {
+  font-variant-numeric: tabular-nums;
+}
+
+.cell-num {
+  font-weight: 600;
+}
+
+.cell-time {
+  color: var(--text-muted);
+}
+
+.cell-right {
+  text-align: right;
+}
+
+.cell-arrow {
+  display: flex;
+  justify-content: flex-end;
+  color: var(--text-faint);
+  transition:
+    color 0.15s,
+    transform 0.15s;
+}
+
+.report-row:hover .cell-arrow {
+  color: var(--primary);
+  transform: translateX(3px);
+}
+
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.user-cell .cell-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Когда таблице не хватает ширины, строки становятся карточками с подписями */
+@media (max-width: 1100px) {
+  .report-head {
+    display: none;
+  }
+
+  .report-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 12px;
+  }
+
+  .report-row .plate,
+  .user-cell {
+    grid-column: 1 / -1;
+  }
+
+  .report-row .plate {
+    max-width: 132px;
+  }
+
+  .cell::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 2px;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-light);
+  }
+
+  /* Подпись над статусом, а не в одном ряду с ним */
+  .report-row .cell-status {
+    flex-wrap: wrap;
+    row-gap: 0;
+  }
+
+  .report-row .cell-status::before {
+    flex-basis: 100%;
+  }
+
+  .cell-right {
+    text-align: left;
+  }
+
+  .cell-arrow {
+    display: none;
+  }
+}
+
+/* ---------- Неактивные строки (видит только разработчик) ---------- */
+
+.report-row.inactive {
+  background: var(--bg-hover);
+  color: var(--text-light);
+  box-shadow: inset 3px 0 0 var(--field-border);
+}
+
+.report-row.inactive:hover {
+  background: var(--bg-muted);
+}
+
+.report-row.inactive .cell-name,
+.report-row.inactive .cell-email {
+  color: var(--text-light);
+}
+
+.report-row.inactive .plate,
+.report-row.inactive .user-avatar,
+.report-row.inactive .role-badge {
+  opacity: 0.5;
+  filter: grayscale(1);
+}
+
+/* Название и пометка в одной ячейке: длинное название обрезается, пометка остаётся видна */
+.name-with-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.name-with-badge > :first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.plate-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+}
+
+@media (max-width: 1100px) {
+  .plate-cell {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 1100px) {
+  .name-with-badge {
+    flex-wrap: wrap;
+    row-gap: 2px;
+  }
+
+  .name-with-badge::before {
+    flex-basis: 100%;
+  }
+}
+
+/* ---------- Строка со ссылкой и чекбоксом (отчёты) ---------- */
+
+/* Ссылка на номере растянута на всю строку, чекбокс лежит поверх неё */
+.row-linked {
+  position: relative;
+}
+
+.row-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.row-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.row-link:focus-visible {
+  outline: none;
+}
+
+.row-linked:has(.row-link:focus-visible) {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
+.cell-check {
+  position: relative;
+  z-index: 1;
+  display: flex;
+}
+
+.report-row.selected,
+.report-row.selected:hover {
+  background: var(--primary-soft);
+}
+
+@media (max-width: 1100px) {
+  .row-link {
+    grid-column: 1 / -1;
+  }
+
+  .cell-check {
+    position: absolute;
+    top: 13px;
+    right: 20px;
+  }
+}
+
+/* ---------- Панель действий с выделенными строками ---------- */
+
+.selection-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin-bottom: 8px;
+  padding: 10px 12px 10px 18px;
+  border: 1px solid var(--primary-border);
+  border-radius: var(--radius-lg);
+  background: var(--primary-soft);
+}
+
+.selection-count {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.selection-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.selection-actions .btn {
+  background: var(--surface);
+}
+
+.selection-error {
+  flex: 1 1 100%;
+}
+
+/* Список пропущенных при массовой смене статуса */
+.skipped-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: min(360px, 50vh);
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  overflow-y: auto;
+}
+
+.skipped-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 14px;
+}
+
+.skipped-plate {
+  font-weight: 600;
+}
+
+.skipped-reason {
+  color: var(--text-muted);
+}
+
+/* ---------- Раскрытие строки отчёта: фото без перехода ---------- */
+
+/* Статус и пометка «не выгружается в ФГИС УТКО» в одной ячейке */
+.cell-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Над растянутой ссылкой строки, чтобы подсказка появлялась при наведении */
+.no-sending-mark {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  color: var(--text-faint);
+  cursor: help;
+}
+
+.no-sending-mark .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.no-sending-mark:hover,
+.no-sending-mark:focus-visible {
+  color: var(--warning);
+}
+
+.cell-expand {
+  position: relative;
+  z-index: 1;
+  display: flex;
+}
+
+.expand-toggle {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text-light);
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+.expand-toggle .icon {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2.2;
+  transition: transform 0.18s ease;
+}
+
+.expand-toggle:hover {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.expand-toggle:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+.expand-toggle[aria-expanded='true'] {
+  color: var(--primary);
+}
+
+.expand-toggle[aria-expanded='true'] .icon {
+  transform: rotate(90deg);
+}
+
+/* Номер не растягивается на всю ширину колонки */
+.report-row .plate {
+  max-width: 132px;
+}
+
+.report-row.expanded {
+  border-bottom-color: transparent;
+  background: var(--bg-tint);
+}
+
+/* Та же сетка, что у строки: каждое фото стоит под своей колонкой, вертикальные рамки 3:4 */
+.report-preview {
+  display: grid;
+  grid-template-columns: var(--cols);
+  column-gap: 16px;
+  padding: 4px 20px 18px;
+  border-bottom: 1px solid var(--line-soft);
+  background: var(--bg-tint);
+  animation: preview-in 0.18s ease-out;
+}
+
+.report-preview:last-child {
+  border-bottom: 0;
+}
+
+.report-preview--state {
+  display: block;
+  padding-top: 8px;
+  padding-left: 64px;
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+@keyframes preview-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.preview-photo {
+  grid-column: var(--col);
+  grid-row: 1;
+  min-width: 0;
+  margin: 0;
+}
+
+.preview-photo .photo-frame {
+  aspect-ratio: 3 / 4;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.preview-photo .photo-frame img {
+  object-fit: contain;
+}
+
+.preview-photo .photo-frame.has-img:hover img {
+  transform: scale(1.03);
+}
+
+.preview-photo figcaption {
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* На карточках кнопка раскрытия — в правом верхнем углу */
+@media (max-width: 1100px) {
+  .cell-expand {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+  }
+
+  .report-preview {
+    display: flex;
+    gap: 12px;
+  }
+
+  .report-preview--state {
+    padding-left: 20px;
+  }
+
+  .preview-photo {
+    width: calc((100% - 24px) / 3);
+  }
+}
+
+/* ---------- Источник отчёта: телефон или веб ---------- */
+.source-mark {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  margin-right: 6px;
+  vertical-align: -3px;
+  color: var(--text-faint);
+  cursor: help;
+}
+
+.source-mark .icon {
+  width: 16px;
+  height: 16px;
+}
+
+.source-mark:hover,
+.source-mark:focus-visible {
+  color: var(--text-muted);
+}

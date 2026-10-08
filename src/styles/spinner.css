@@ -1,0 +1,54 @@
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Спиннер ---------- */
+
+.spinner {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--line);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.spinner--sm {
+  width: 16px;
+  height: 16px;
+}
+
+.spinner--lg {
+  width: 32px;
+  height: 32px;
+  border-width: 3px;
+}
+
+/* ---------- Кнопка в процессе: спиннер слева от текста ---------- */
+
+.btn[aria-busy='true']::before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+/* Спиннер встаёт на место иконки, а не рядом с ней */
+.btn[aria-busy='true'] .icon {
+  display: none;
+}
+
+/* Анимация только замедлена, а не отключена: это индикатор состояния */
+@media (prefers-reduced-motion: reduce) {
+  .spinner,
+  .btn[aria-busy='true']::before {
+    animation-duration: 1.8s;
+  }
+}

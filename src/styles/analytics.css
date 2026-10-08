@@ -1,0 +1,42 @@
+/* ---------- Раздел «Аналитика» (features/analytics) ---------- */
+
+.analytics-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px 16px;
+  min-height: 44px;
+  margin-bottom: 16px;
+}
+
+.analytics-title {
+  margin: 0 0 2px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.analytics-sub {
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+.analytics-picker {
+  width: 280px;
+  max-width: 100%;
+}
+
+/* Для того чтобы плитки и графики шли с одинаковым шагом, как в демо, отступ задают графики */
+.analytics .stats {
+  margin-bottom: 0;
+}
+
+@media (max-width: 640px) {
+  .analytics .stats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .analytics-picker {
+    width: 100%;
+  }
+}
