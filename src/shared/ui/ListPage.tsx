@@ -16,7 +16,9 @@ type ListState = {
   reset: () => void
 }
 
-type Props<T> = {
+// Q — строки с сервера, T — строки таблицы. Обычно это одно и то же, но список может показывать и строки,
+// которых в ответе уже нет (items), например отчёт, который только что принял другой пользователь
+type Props<Q, T = Q> = {
   title: string
   actions?: ReactNode
   top?: ReactNode // блок над фильтрами (например, статистика)
@@ -24,13 +26,14 @@ type Props<T> = {
   above?: ReactNode // блок над таблицей (например, действия с выделенными строками)
   filters: ReactNode
   list: ListState
-  query: UseQueryResult<Paged<T>>
+  query: UseQueryResult<Paged<Q>>
+  items?: T[] // строки вместо query.data.items
   columns: ReactNode[] // заголовки таблицы, у колонки со стрелкой пустая строка
   tableClass: string // раскладка колонок, например list-vehicles
   renderRow: (item: T) => ReactNode // возвращает строку с key
 }
 
-export function ListPage<T>({
+export function ListPage<Q, T = Q>({
   title,
   actions,
   top,
@@ -39,16 +42,21 @@ export function ListPage<T>({
   filters,
   list,
   query,
+  items,
   columns,
   tableClass,
   renderRow,
-}: Props<T>) {
-  const { data, isPending, isError, isFetching } = query
-  const refreshing = isFetching && !isPending
+}: Props<Q, T>) {
+  const { data, isPending, isError, isFetching, isPlaceholderData } = query
+  // Спиннер — только пока на месте нового списка показан старый (смена страницы или фильтров).
+  // Фоновое обновление по событиям сервера не мигает спиннером каждую секунду
+  const refreshing = isFetching && isPlaceholderData
+  // Без items строки таблицы и есть строки ответа (T совпадает с Q)
+  const rows = items ?? (data?.items as T[] | undefined)
 
   const emptyText = isError
     ? 'Не удалось загрузить данные'
-    : data?.items.length === 0
+    : rows?.length === 0
       ? 'Ничего не найдено'
       : null
 
@@ -99,7 +107,7 @@ export function ListPage<T>({
             ) : emptyText ? (
               <div className="empty">{emptyText}</div>
             ) : (
-              data?.items.map(renderRow)
+              rows?.map(renderRow)
             )}
           </div>
         </section>

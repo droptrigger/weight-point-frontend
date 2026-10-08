@@ -1,6 +1,8 @@
 import { session } from './session'
 
-const BASE = `${import.meta.env.VITE_API_URL ?? ''}/api/v1`
+// Адрес сервера: REST лежит под /api/v1, хабы SignalR — под /hubs
+export const API_ORIGIN: string = import.meta.env.VITE_API_URL ?? ''
+const BASE = `${API_ORIGIN}/api/v1`
 
 export type Paged<T> = { items: T[]; totalCount: number; page: number; pageSize: number }
 export type ListParams = {
@@ -72,6 +74,18 @@ function refresh(): Promise<boolean> {
       refreshing = null
     })
   return refreshing
+}
+
+// Токен для соединений мимо request (WebSocket SignalR): у них нет повтора после 401, поэтому истекающий токен
+// обновляется заранее. Если обновить не удалось (например, сервер перезапускается), отдаётся старый: соединение
+// само попробует ещё раз, а выход из системы остаётся за обычными запросами
+export async function freshAccessToken(): Promise<string> {
+  const tokens = session.get()
+  if (!tokens) return ''
+  if (new Date(tokens.accessTokenExpiresAt).getTime() - Date.now() > 30_000)
+    return tokens.accessToken
+  await refresh()
+  return session.get()?.accessToken ?? ''
 }
 
 function parse(text: string): unknown {

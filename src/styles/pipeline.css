@@ -1,0 +1,377 @@
+/* ---------- Отправка в ФГИС УТКО: сводка и этапы ---------- */
+
+.pipeline-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.pipeline-state {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.pipeline-state-title {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+/* Справа от названия полигона: ссылка на настройки и выбор полигона у разработчика */
+.pipeline-head-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.pipeline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Ход ручной отправки: зелёная часть — отправлены, красная — с ошибкой */
+.send-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.send-progress-text {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  min-height: 36px;
+  font-size: 14px;
+}
+
+.send-progress-counts {
+  display: inline-flex;
+  gap: 12px;
+}
+
+.send-progress-ok {
+  color: var(--success);
+}
+
+.send-progress-failed {
+  color: var(--danger);
+}
+
+.send-progress-text .icon-btn {
+  margin-left: auto;
+}
+
+.send-progress-bar {
+  display: flex;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--bg-muted);
+}
+
+.send-progress-sent,
+.send-progress-fail {
+  height: 100%;
+  transition: width 0.3s;
+}
+
+.send-progress-sent {
+  background: var(--success);
+}
+
+.send-progress-fail {
+  background: var(--danger);
+}
+
+/* Этапы слева направо, как колонки доски задач: приглушённый фон колонки и отдельные карточки
+   отчётов. На узком экране по два, на телефоне друг под другом */
+.pipeline {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: start;
+  gap: 12px;
+}
+
+.pipeline-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--bg-subtle);
+}
+
+.pipeline-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+/* Значок этапа без подложки, цветом статуса */
+.pipeline-icon {
+  display: flex;
+  color: var(--primary);
+}
+
+.pipeline-icon .icon {
+  width: 16px;
+  height: 16px;
+}
+
+.pipeline-column--queue .pipeline-icon {
+  color: var(--warning);
+}
+
+.pipeline-column--failed .pipeline-icon {
+  color: var(--danger);
+}
+
+.pipeline-column--sent .pipeline-icon {
+  color: var(--success);
+}
+
+.pipeline-title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Счётчик плашкой справа от названия */
+.pipeline-count {
+  min-width: 24px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--bg-muted);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.pipeline-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: min(640px, 65vh);
+  padding: 8px;
+  overflow-y: auto;
+}
+
+.pipeline-empty {
+  padding: 20px 8px;
+  color: var(--text-light);
+  font-size: 13px;
+  text-align: center;
+}
+
+/* ---------- Карточка отчёта ---------- */
+
+.pipeline-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 6px 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition:
+    border-color 0.15s,
+    background-color 1s;
+}
+
+.pipeline-item:hover {
+  border-color: var(--field-border-hover);
+}
+
+.pipeline-item.selected {
+  border-color: var(--primary-border);
+  background: var(--primary-soft);
+}
+
+/* Открытый в панели отчёт */
+.pipeline-item.active,
+.pipeline-item.active:hover {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+/* Новая карточка подсвечена фоном, а не анимацией: так её видно и при «уменьшить движение» */
+.pipeline-item.fresh {
+  background: var(--warning-soft);
+}
+
+.pipeline-item--skeleton {
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+}
+
+.pipeline-check {
+  display: flex;
+  padding-top: 7px;
+}
+
+/* Вся карточка открывает отчёт в панели, кроме чекбокса и кнопки отправки */
+.pipeline-open {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pipeline-open:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.pipeline-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* Номер той же ширины, что в списке отчётов, а не на всю карточку */
+.pipeline-line .plate {
+  flex: none;
+  width: 132px;
+}
+
+.pipeline-weight {
+  margin-left: auto;
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Строка под заголовком: порядковый номер, время и вид отходов с иконками */
+.pipeline-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  color: var(--text-light);
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.pipeline-order {
+  flex: none;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.pipeline-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.pipeline-meta-item .icon {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+
+/* Длинное название вида отходов обрезается, время остаётся видно целиком */
+.pipeline-meta-waste {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.pipeline-meta-waste > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pipeline-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-size: 13px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.pipeline-error .icon {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin-top: 2px;
+}
+
+.pipeline-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  min-height: 32px;
+}
+
+.pipeline-action .icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+}
+
+.pipeline-more {
+  padding: 10px 14px;
+  border-top: 1px solid var(--line);
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.pipeline-more:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 1400px) {
+  .pipeline {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .pipeline {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pipeline-state {
+    flex-wrap: wrap;
+  }
+
+  .pipeline-head-actions {
+    width: 100%;
+  }
+}

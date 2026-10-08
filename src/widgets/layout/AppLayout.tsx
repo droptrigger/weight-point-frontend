@@ -19,6 +19,7 @@ import {
   useRole,
   type Permission,
 } from '@/features/auth/permissions'
+import { useReportsLive } from '@/features/reports/live/useReportsLive'
 import { cx } from '@/shared/lib/cx'
 import { useDisclosure } from '@/shared/lib/useDisclosure'
 import { HeaderAccountContext } from '@/shared/ui/headerAccount'
@@ -47,6 +48,8 @@ export function AppLayout() {
   const { data: me, isPending } = useMe()
   const logout = useDisclosure()
   const sidebar = useSidebarResize()
+  // Одно соединение SignalR на всё приложение: открытые списки и карточки отчётов обновляются сами
+  useReportsLive()
   // Подсказка ручки видна при наведении на всю высоту кромки, а не только на саму ручку
   const edgeHover = useDisclosure()
 

@@ -11,12 +11,20 @@ import {
 export const sendingKeys = {
   // Внутри ключа карточки полигона: всё, что сбрасывает полигон, сбрасывает и его настройки отправки
   settings: (landfillId: string) => [...landfillKeys.one(landfillId), 'sending-settings'] as const,
+  status: (landfillId: string) => [...landfillKeys.one(landfillId), 'sending-status'] as const,
 }
 
 export const useSendingSettings = (landfillId: string, enabled = true) =>
   useQuery({
     queryKey: sendingKeys.settings(landfillId),
     queryFn: () => sendingApi.get(landfillId),
+    enabled,
+  })
+
+export const useSendingStatus = (landfillId: string, enabled = true) =>
+  useQuery({
+    queryKey: sendingKeys.status(landfillId),
+    queryFn: () => sendingApi.status(landfillId),
     enabled,
   })
 
@@ -27,7 +35,10 @@ function useSettingsMutation<V>(landfillId: string, fn: (v: V) => Promise<Sendin
   const key = sendingKeys.settings(landfillId)
   return useMutation({
     mutationFn: fn,
-    onSuccess: (data) => qc.setQueryData(key, data),
+    onSuccess: (data) => {
+      qc.setQueryData(key, data)
+      return qc.invalidateQueries({ queryKey: sendingKeys.status(landfillId) })
+    },
     onError: () => qc.invalidateQueries({ queryKey: key }),
   })
 }

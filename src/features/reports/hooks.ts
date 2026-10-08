@@ -1,4 +1,10 @@
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import {
+  keepPreviousData,
+  queryOptions,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 import { ApiError } from '@/shared/api/http'
 import {
   reportsApi,
@@ -7,9 +13,10 @@ import {
   type ReportPhotos,
   type ReportUpdate,
   type ReviewStatusCode,
+  type SendAllStatus,
 } from './api'
 
-const reportKeys = {
+export const reportKeys = {
   all: ['reports'] as const,
   lists: () => [...reportKeys.all, 'list'] as const,
   list: (p: ReportParams) => [...reportKeys.lists(), p] as const,
@@ -22,12 +29,16 @@ const reportKeys = {
   analytics: (landfillId?: string) => [...reportKeys.analyticsAll(), landfillId] as const,
 }
 
-export const useReports = (p: ReportParams) =>
-  useQuery({
+// Для нескольких списков сразу (useQueries), например колонок отправки
+export const reportListQuery = (p: ReportParams) =>
+  queryOptions({
     queryKey: reportKeys.list(p),
     queryFn: () => reportsApi.list(p),
     placeholderData: keepPreviousData,
   })
+
+export const useReports = (p: ReportParams, enabled = true) =>
+  useQuery({ ...reportListQuery(p), enabled })
 
 export const useReport = (id: string) =>
   useQuery({ queryKey: reportKeys.one(id), queryFn: () => reportsApi.get(id) })
@@ -59,6 +70,25 @@ export function useChangeReportsStatus() {
   return useMutation({
     mutationFn: (v: { ids: string[]; status: ReviewStatusCode; comment?: string }) =>
       reportsApi.changeStatus(v.ids, v.status, v.comment),
+    onSuccess: () => qc.invalidateQueries({ queryKey: reportKeys.all }),
+  })
+}
+
+// Отчёты сразу становятся «Отправляется», поэтому кеш сбрасывается после ответа, а итог отправки
+// каждого отчёта приходит позже через SignalR
+export function useSendReports() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: reportsApi.send,
+    onSuccess: () => qc.invalidateQueries({ queryKey: reportKeys.all }),
+  })
+}
+
+export function useSendAllReports() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (v: { status: SendAllStatus; landfillId?: string }) =>
+      reportsApi.sendAll(v.status, v.landfillId),
     onSuccess: () => qc.invalidateQueries({ queryKey: reportKeys.all }),
   })
 }

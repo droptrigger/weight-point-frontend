@@ -39,6 +39,7 @@ import { ReportSourceIcon } from './ReportSourceIcon'
 import { ReportStatusBadge } from './ReportStatusBadge'
 import { ReportStatusHistory } from './ReportStatusHistory'
 import { REPORT_SOURCE_LABELS } from './sources'
+import { isLocked } from './statuses'
 
 type StatProps = {
   label: string
@@ -150,10 +151,10 @@ type ViewProps = {
 export function ReportView({ report: r, onDeleted }: ViewProps) {
   const canSeeUsers = useCan('users.view')
   const canSeeLandfills = useCan('landfills.view')
-  // Отправленный в ФГИС УТКО отчёт больше не меняется
-  const canEdit = useCan('reports.edit') && r.status.code !== 'sent'
-  // Удаление безвозвратное, отправленный в ФГИС УТКО отчёт сервер удалить не даст
-  const canDelete = useCan('reports.delete') && r.status.code !== 'sent'
+  // Отправленный или уходящий в ФГИС УТКО отчёт не меняется
+  const canEdit = useCan('reports.edit') && !isLocked(r.status.code)
+  // Удаление безвозвратное, отправленный или уходящий в ФГИС УТКО отчёт сервер удалить не даст
+  const canDelete = useCan('reports.delete') && !isLocked(r.status.code)
   const edit = useDisclosure()
   const remove = useDeleteFlow(useDeleteReport(), '/reports', onDeleted)
   const replace = useReplaceReportPhoto()

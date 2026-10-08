@@ -1,0 +1,172 @@
+/* ---------- Подразделы отчётов и связь с сервером обновлений ---------- */
+
+.report-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
+  margin-bottom: 20px;
+}
+
+.report-tabs-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius);
+  background: var(--bg-muted);
+}
+
+.report-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+.report-tab:hover {
+  color: var(--text);
+}
+
+.report-tab.active {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.report-tab:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+.report-tab-count {
+  min-width: 20px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.report-tab-count--danger {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+/* Соседние счётчики вкладки отправки стоят вплотную: очередь и ошибки */
+.report-tab-count + .report-tab-count {
+  margin-left: -4px;
+}
+
+.live-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-light);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.live-dot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-faint);
+}
+
+.live-indicator--online .live-dot {
+  background: var(--success);
+}
+
+/* Пока связь есть, от точки расходится кольцо: видно, что соединение живое */
+.live-indicator--online .live-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--success);
+  animation: live-pulse 2s ease-out infinite;
+}
+
+@keyframes live-pulse {
+  0% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
+/* При «уменьшить движение» кольцо не растёт, а только мягко гаснет и загорается: мигание остаётся
+   видно, но без движения */
+@media (prefers-reduced-motion: reduce) {
+  .live-indicator--online .live-dot::after {
+    inset: -3px;
+    animation: live-breathe 2s ease-in-out infinite;
+  }
+}
+
+@keyframes live-breathe {
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.live-indicator--connecting .live-dot {
+  background: var(--warning);
+  box-shadow: 0 0 0 3px var(--warning-soft);
+}
+
+.live-indicator--offline {
+  color: var(--danger);
+}
+
+.live-indicator--offline .live-dot {
+  background: var(--danger);
+  box-shadow: 0 0 0 3px var(--danger-soft);
+}
+
+/* ---------- Строки, изменённые другими пользователями ---------- */
+
+/* Новая строка подсвечена несколько секунд. Подсветка — фон, а не анимация, чтобы её было видно
+   и при «уменьшить движение» (prefers-reduced-motion) */
+.report-row.fresh {
+  background: var(--warning-soft);
+  transition: background-color 1s;
+}
+
+/* Отчёт ушёл из списка (его принял другой проверяющий или он удалён): строка ещё видна на месте,
+   но с ней уже ничего не сделать */
+.report-row.gone {
+  background: var(--bg-hover);
+  color: var(--text-light);
+}
+
+.report-row.gone .plate,
+.report-row.gone .cell-num,
+.report-row.gone .cell-time {
+  opacity: 0.5;
+}

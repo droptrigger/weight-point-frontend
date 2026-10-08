@@ -9,6 +9,7 @@ import { CarrierPage } from '@/features/carriers/CarrierPage'
 import { CarriersPage } from '@/features/carriers/CarriersPage'
 import { LandfillPage } from '@/features/landfills/LandfillPage'
 import { LandfillsPage } from '@/features/landfills/LandfillsPage'
+import { SendingPipelinePage } from '@/features/reports/pipeline/SendingPipelinePage'
 import { ReportPage } from '@/features/reports/ReportPage'
 import { ReportsPage } from '@/features/reports/ReportsPage'
 import { SendingPage } from '@/features/sending/SendingPage'
@@ -32,6 +33,15 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <Navigate to="/reports" replace /> },
           { path: 'reports', element: <ReportsPage /> },
+          {
+            // Подразделы проверяющих: очередь проверки и отправка в ФГИС УТКО.
+            // key: разделы не делят состояние (раскрытые строки, выделение)
+            element: <RequirePermission permission="reports.review" />,
+            children: [
+              { path: 'reports/review', element: <ReportsPage key="review" review /> },
+              { path: 'reports/sending', element: <SendingPipelinePage /> },
+            ],
+          },
           { path: 'reports/:id', element: <ReportPage /> },
           { path: 'carriers', element: <CarriersPage /> },
           { path: 'carriers/:id', element: <CarrierPage /> },

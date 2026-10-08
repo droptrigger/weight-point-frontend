@@ -84,6 +84,34 @@
   color: var(--primary);
 }
 
+/* Отправляется: точка превращается в крутящееся кольцо */
+.badge.status-sending {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.badge.status-sending::before {
+  width: 9px;
+  height: 9px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  background: none;
+  animation: spin 0.9s linear infinite;
+}
+
+/* Как у спиннера: при «уменьшить движение» вращение замедлено, а не отключено — это индикатор состояния */
+@media (prefers-reduced-motion: reduce) {
+  .badge.status-sending::before {
+    animation-duration: 1.8s;
+  }
+}
+
+/* Отчёт удалён, пока был открыт список */
+.badge.status-deleted {
+  background: var(--bg-muted);
+  color: var(--text-light);
+}
+
 .badge.status-accepted,
 .badge.status-sent {
   background: var(--success-soft);
